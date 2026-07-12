@@ -1,0 +1,6 @@
+{
+  "name": "Koperasi ICMS",
+  "description": "Aplikasi manajemen dan transparansi keuangan Koperasi ICMS dengan pembagian SHU dinamis dan mode buku besar kas klasik.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

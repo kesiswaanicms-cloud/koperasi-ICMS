@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-brand: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-green-primary: #1B4332;
+  --color-gold-accent: #B8860B;
+  --color-yellow-accent: #E9C46A;
+  --color-cream-bg: #FDFBF5;
+  --color-cream-card: #F5F2EA;
+  --color-beige-border: #D4C4A8;
+}
+
+/* Custom ledger ledger lines and book styles */
+@layer utilities {
+  .ledger-double-underline {
+    border-bottom: 3px double currentColor;
+  }
+  .paper-bg {
+    background-color: #FDFBF5; /* warm cream page */
+    background-image: 
+      radial-gradient(#D4C4A8 1px, transparent 1px), 
+      radial-gradient(#D4C4A8 1px, #FDFBF5 1px);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+  }
+  .ledger-row-dashed {
+    background-image: linear-gradient(to right, #D4C4A8 50%, rgba(255,255,255,0) 0%);
+    background-position: bottom;
+    background-size: 6px 1px;
+    background-repeat: repeat-x;
+  }
+}
+
+/* Scrollbar styling matching the vintage books */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1ebd9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c8bda3;
+  border-radius: 4px;
+  border: 2px solid #f1ebd9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8c7f65;
+}
