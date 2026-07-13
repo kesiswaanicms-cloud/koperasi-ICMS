@@ -55,4 +55,5 @@ export interface KoperasiData {
   simpanan: Simpanan[];
   labaUsaha: LabaUsaha[];
   pengaturanSHU: PengaturanSHU;
+  lastUpdated?: number;
 }

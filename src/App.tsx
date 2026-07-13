@@ -26,14 +26,61 @@ import ManageProfit from './components/ManageProfit';
 import SHUCalculator from './components/SHUCalculator';
 
 export default function App() {
-  // Core Cooperative state
-  const [anggotaList, setAnggotaList] = useState<Anggota[]>([]);
-  const [simpananList, setSimpananList] = useState<Simpanan[]>([]);
-  const [labaUsahaList, setLabaUsahaList] = useState<LabaUsaha[]>([]);
-  const [pengaturanSHU, setPengaturanSHU] = useState<PengaturanSHU>({
-    persenLabaPool: 45,
-    persenPoolSimpanan: 60,
-    persenPoolPengurus: 40
+  // Core Cooperative state initialized from localStorage for instant, offline-safe load
+  const [anggotaList, setAnggotaList] = useState<Anggota[]>(() => {
+    try {
+      const saved = localStorage.getItem('koperasi_local_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.anggota)) return parsed.anggota;
+      }
+    } catch (e) {
+      console.error('Error reading anggotaList from localStorage:', e);
+    }
+    return [];
+  });
+
+  const [simpananList, setSimpananList] = useState<Simpanan[]>(() => {
+    try {
+      const saved = localStorage.getItem('koperasi_local_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.simpanan)) return parsed.simpanan;
+      }
+    } catch (e) {
+      console.error('Error reading simpananList from localStorage:', e);
+    }
+    return [];
+  });
+
+  const [labaUsahaList, setLabaUsahaList] = useState<LabaUsaha[]>(() => {
+    try {
+      const saved = localStorage.getItem('koperasi_local_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.labaUsaha)) return parsed.labaUsaha;
+      }
+    } catch (e) {
+      console.error('Error reading labaUsahaList from localStorage:', e);
+    }
+    return [];
+  });
+
+  const [pengaturanSHU, setPengaturanSHU] = useState<PengaturanSHU>(() => {
+    try {
+      const saved = localStorage.getItem('koperasi_local_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.pengaturanSHU) return parsed.pengaturanSHU;
+      }
+    } catch (e) {
+      console.error('Error reading pengaturanSHU from localStorage:', e);
+    }
+    return {
+      persenLabaPool: 45,
+      persenPoolSimpanan: 60,
+      persenPoolPengurus: 40
+    };
   });
 
   // UI state
@@ -61,60 +108,34 @@ export default function App() {
     }
   }, []);
 
-  // Fetch full state from backend server on mount
-  const fetchState = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/koperasi');
-      if (response.ok) {
-        const data: KoperasiData = await response.json();
-        setAnggotaList(data.anggota || []);
-        setSimpananList(data.simpanan || []);
-        setLabaUsahaList(data.labaUsaha || []);
-        setPengaturanSHU(data.pengaturanSHU || {
-          persenLabaPool: 45,
-          persenPoolSimpanan: 60,
-          persenPoolPengurus: 40
-        });
-        
-        // Default select member if exists
-        if (data.anggota && data.anggota.length > 0) {
-          setSelectedMemberId(data.anggota[0].id);
-        }
-        setSyncStatus('synced');
-      } else {
-        console.error('Failed to fetch data from backend');
-        setSyncStatus('error');
-      }
-    } catch (err) {
-      console.error('Error fetching cooperative state:', err);
-      setSyncStatus('error');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchState();
-  }, []);
-
-  // Save changes to the backend Express server
+  // Save changes to the backend Express server and localStorage
   const saveChangesToServer = async (
     updatedAnggota: Anggota[],
     updatedSimpanan: Simpanan[],
     updatedLaba: LabaUsaha[],
-    updatedSettings: PengaturanSHU
+    updatedSettings: PengaturanSHU,
+    overrideTimestamp?: number
   ) => {
     setIsSyncing(true);
     setSyncStatus('saving');
-    try {
-      const payload: KoperasiData = {
-        anggota: updatedAnggota,
-        simpanan: updatedSimpanan,
-        labaUsaha: updatedLaba,
-        pengaturanSHU: updatedSettings
-      };
+    const timestamp = overrideTimestamp || Date.now();
 
+    const payload: KoperasiData = {
+      anggota: updatedAnggota,
+      simpanan: updatedSimpanan,
+      labaUsaha: updatedLaba,
+      pengaturanSHU: updatedSettings,
+      lastUpdated: timestamp
+    };
+
+    // Keep localStorage instantly updated
+    try {
+      localStorage.setItem('koperasi_local_data', JSON.stringify(payload));
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e);
+    }
+
+    try {
       const response = await fetch('/api/koperasi/sync', {
         method: 'POST',
         headers: {
@@ -137,6 +158,90 @@ export default function App() {
     }
   };
 
+  // Fetch full state from backend server on mount
+  const fetchState = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/koperasi');
+      if (response.ok) {
+        const data: KoperasiData = await response.json();
+        
+        let useServerData = true;
+        try {
+          const localSaved = localStorage.getItem('koperasi_local_data');
+          if (localSaved) {
+            const localData = JSON.parse(localSaved);
+            const localTime = localData.lastUpdated || 0;
+            const serverTime = data.lastUpdated || 0;
+            
+            // If local storage has a newer version of the data, prefer it and sync it to the server!
+            if (localTime > serverTime) {
+              useServerData = false;
+              setAnggotaList(localData.anggota || []);
+              setSimpananList(localData.simpanan || []);
+              setLabaUsahaList(localData.labaUsaha || []);
+              setPengaturanSHU(localData.pengaturanSHU || {
+                persenLabaPool: 45,
+                persenPoolSimpanan: 60,
+                persenPoolPengurus: 40
+              });
+              
+              // Restore backend database from client
+              saveChangesToServer(
+                localData.anggota || [],
+                localData.simpanan || [],
+                localData.labaUsaha || [],
+                localData.pengaturanSHU || {
+                  persenLabaPool: 45,
+                  persenPoolSimpanan: 60,
+                  persenPoolPengurus: 40
+                },
+                localTime
+              );
+            }
+          }
+        } catch (e) {
+          console.error('Error reconciling data with localStorage:', e);
+        }
+
+        if (useServerData) {
+          setAnggotaList(data.anggota || []);
+          setSimpananList(data.simpanan || []);
+          setLabaUsahaList(data.labaUsaha || []);
+          setPengaturanSHU(data.pengaturanSHU || {
+            persenLabaPool: 45,
+            persenPoolSimpanan: 60,
+            persenPoolPengurus: 40
+          });
+          
+          try {
+            localStorage.setItem('koperasi_local_data', JSON.stringify(data));
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        
+        const activeAnggota = useServerData ? (data.anggota || []) : (JSON.parse(localStorage.getItem('koperasi_local_data') || '{}').anggota || []);
+        if (activeAnggota.length > 0) {
+          setSelectedMemberId(activeAnggota[0].id);
+        }
+        setSyncStatus('synced');
+      } else {
+        console.error('Failed to fetch data from backend');
+        setSyncStatus('error');
+      }
+    } catch (err) {
+      console.error('Error fetching cooperative state:', err);
+      setSyncStatus('error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchState();
+  }, []);
+
   // Reset database to initial seed defaults
   const handleResetData = async () => {
     if (!window.confirm('Apakah Anda yakin ingin me-reset seluruh buku kas keuangan Koperasi ICMS ke data bawaan simulasi? Semua data tambahan Anda akan terhapus.')) {
@@ -151,6 +256,14 @@ export default function App() {
       });
       if (response.ok) {
         const result = await response.json();
+        
+        // Remove locally stored state so we start fresh from seed
+        try {
+          localStorage.removeItem('koperasi_local_data');
+        } catch (e) {
+          console.error('Failed to clear localStorage:', e);
+        }
+
         setAnggotaList(result.data.anggota);
         setSimpananList(result.data.simpanan);
         setLabaUsahaList(result.data.labaUsaha);
