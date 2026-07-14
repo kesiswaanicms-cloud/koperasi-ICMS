@@ -29,6 +29,7 @@ import ManageMembers from './components/ManageMembers';
 import ManageSavings from './components/ManageSavings';
 import ManageProfit from './components/ManageProfit';
 import SHUCalculator from './components/SHUCalculator';
+import seedData from '../data/seed_data.json';
 
 export default function App() {
   // Remote synchronization state
@@ -58,7 +59,7 @@ export default function App() {
     } catch (e) {
       console.error('Error reading anggotaList from localStorage:', e);
     }
-    return [];
+    return (seedData as any).anggota || [];
   });
 
   const [simpananList, setSimpananList] = useState<Simpanan[]>(() => {
@@ -71,7 +72,7 @@ export default function App() {
     } catch (e) {
       console.error('Error reading simpananList from localStorage:', e);
     }
-    return [];
+    return (seedData as any).simpanan || [];
   });
 
   const [labaUsahaList, setLabaUsahaList] = useState<LabaUsaha[]>(() => {
@@ -84,7 +85,7 @@ export default function App() {
     } catch (e) {
       console.error('Error reading labaUsahaList from localStorage:', e);
     }
-    return [];
+    return (seedData as any).labaUsaha || [];
   });
 
   const [pengaturanSHU, setPengaturanSHU] = useState<PengaturanSHU>(() => {
@@ -97,7 +98,7 @@ export default function App() {
     } catch (e) {
       console.error('Error reading pengaturanSHU from localStorage:', e);
     }
-    return {
+    return (seedData as any).pengaturanSHU || {
       persenLabaPool: 45,
       persenPoolSimpanan: 60,
       persenPoolPengurus: 40
@@ -107,7 +108,18 @@ export default function App() {
   // UI state
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [currentUserRole, setCurrentUserRole] = useState<'admin' | 'anggota' | 'guest'>('guest');
-  const [selectedMemberId, setSelectedMemberId] = useState<string>('');
+  const [selectedMemberId, setSelectedMemberId] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('koperasi_local_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.anggota) && parsed.anggota.length > 0) return parsed.anggota[0].id;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return (seedData as any).anggota?.[0]?.id || '';
+  });
   
   // Connection and synchronization states
   const [isLoading, setIsLoading] = useState<boolean>(true);
