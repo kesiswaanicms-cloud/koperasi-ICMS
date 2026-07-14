@@ -9,6 +9,17 @@ const PORT = 3000;
 
 app.use(express.json());
 
+// Enable CORS for external client sync (e.g., Vercel deployment)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'koperasi_db.json');
 

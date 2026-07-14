@@ -14,7 +14,12 @@ import {
   RefreshCw,
   Copy,
   CheckCircle,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Cloud,
+  Database,
+  Download,
+  Upload,
+  Settings
 } from 'lucide-react';
 
 import { KoperasiData, Anggota, Simpanan, LabaUsaha, PengaturanSHU } from './types';
@@ -26,6 +31,22 @@ import ManageProfit from './components/ManageProfit';
 import SHUCalculator from './components/SHUCalculator';
 
 export default function App() {
+  // Remote synchronization state
+  const [remoteSyncUrl, setRemoteSyncUrl] = useState<string>(() => {
+    return localStorage.getItem('koperasi_remote_sync_url') || '';
+  });
+  const [copiedSyncUrl, setCopiedSyncUrl] = useState<boolean>(false);
+
+  const getApiUrl = (endpoint: string) => {
+    const envUrl = (import.meta as any).env?.VITE_SYNC_SERVER_URL;
+    const customSyncUrl = localStorage.getItem('koperasi_remote_sync_url') || envUrl;
+    if (customSyncUrl && customSyncUrl.trim() !== '') {
+      const base = customSyncUrl.replace(/\/$/, '');
+      const cleanEndpoint = '/' + endpoint.replace(/^\//, '');
+      return `${base}${cleanEndpoint}`;
+    }
+    return endpoint;
+  };
   // Core Cooperative state initialized from localStorage for instant, offline-safe load
   const [anggotaList, setAnggotaList] = useState<Anggota[]>(() => {
     try {
@@ -136,7 +157,7 @@ export default function App() {
     }
 
     try {
-      const response = await fetch('/api/koperasi/sync', {
+      const response = await fetch(getApiUrl('/api/koperasi/sync'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -162,7 +183,7 @@ export default function App() {
   const fetchState = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/koperasi');
+      const response = await fetch(getApiUrl('/api/koperasi'));
       if (response.ok) {
         const data: KoperasiData = await response.json();
         
@@ -251,7 +272,7 @@ export default function App() {
     setIsSyncing(true);
     setSyncStatus('saving');
     try {
-      const response = await fetch('/api/koperasi/reset', {
+      const response = await fetch(getApiUrl('/api/koperasi/reset'), {
         method: 'POST'
       });
       if (response.ok) {
@@ -282,6 +303,91 @@ export default function App() {
       setSyncStatus('error');
     } finally {
       setIsSyncing(false);
+    }
+  };
+
+  // Save/disconnect remote sync server URL
+  const handleSaveRemoteSyncUrl = (url: string) => {
+    const trimmed = url.trim();
+    if (trimmed === '') {
+      localStorage.removeItem('koperasi_remote_sync_url');
+      setRemoteSyncUrl('');
+      alert('Sistem kembali menggunakan database default (Local Mode)');
+    } else {
+      if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+        alert('URL sinkronisasi tidak valid! Harus diawali dengan http:// atau https://');
+        return;
+      }
+      localStorage.setItem('koperasi_remote_sync_url', trimmed);
+      setRemoteSyncUrl(trimmed);
+      alert('Berhasil terhubung ke Master Server! Sistem akan me-refresh database.');
+    }
+    setTimeout(() => {
+      fetchState();
+    }, 150);
+  };
+
+  // Export all database contents to a local backup JSON file
+  const handleExportData = () => {
+    const payload: KoperasiData = {
+      anggota: anggotaList,
+      simpanan: simpananList,
+      labaUsaha: labaUsahaList,
+      pengaturanSHU: pengaturanSHU,
+      lastUpdated: Date.now()
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    
+    const d = new Date();
+    const dateString = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`;
+    downloadAnchor.setAttribute("download", `koperasi_icms_backup_${dateString}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
+  // Import database contents from a backup JSON file
+  const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileReader = new FileReader();
+    if (e.target.files && e.target.files[0]) {
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = (event) => {
+        try {
+          const parsed: KoperasiData = JSON.parse(event.target?.result as string);
+          if (parsed && (Array.isArray(parsed.anggota) || Array.isArray(parsed.simpanan) || Array.isArray(parsed.labaUsaha))) {
+            const confirmed = window.confirm('Apakah Anda yakin ingin menimpa seluruh database koperasi saat ini dengan data dari file cadangan ini?');
+            if (confirmed) {
+              const updatedAnggota = parsed.anggota || [];
+              const updatedSimpanan = parsed.simpanan || [];
+              const updatedLaba = parsed.labaUsaha || [];
+              const updatedSettings = parsed.pengaturanSHU || {
+                persenLabaPool: 45,
+                persenPoolSimpanan: 60,
+                persenPoolPengurus: 40
+              };
+              
+              setAnggotaList(updatedAnggota);
+              setSimpananList(updatedSimpanan);
+              setLabaUsahaList(updatedLaba);
+              setPengaturanSHU(updatedSettings);
+              
+              if (updatedAnggota.length > 0) {
+                setSelectedMemberId(updatedAnggota[0].id);
+              }
+              
+              saveChangesToServer(updatedAnggota, updatedSimpanan, updatedLaba, updatedSettings);
+              alert('Data koperasi berhasil dipulihkan dari file JSON!');
+            }
+          } else {
+            alert('Format file cadangan JSON tidak valid!');
+          }
+        } catch (error) {
+          alert('Gagal membaca file JSON. Pastikan file valid.');
+          console.error(error);
+        }
+      };
     }
   };
 
@@ -524,6 +630,119 @@ export default function App() {
                   </>
                 )}
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Cloud Sync & Backup Panel */}
+        <div className="mt-6 bg-cream-card border-2 border-beige-border rounded-xl p-5 shadow-sm">
+          <h4 className="text-sm font-semibold text-green-primary font-display flex items-center gap-1.5 mb-4">
+            <Cloud className="h-4 w-4 text-gold-accent animate-pulse" />
+            Sinkronisasi Cloud & Cadangan Data Koperasi (Multi-Platform)
+          </h4>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Column 1: API Sync */}
+            <div className="bg-white/50 border border-beige-border/60 rounded-lg p-4 space-y-3">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-green-primary uppercase tracking-wider font-brand">
+                <Database className="h-3.5 w-3.5 text-green-primary" />
+                Hubungkan Google AI Studio & Vercel
+              </div>
+              <p className="text-[11px] text-slate-600 leading-relaxed text-justify">
+                Hosting Vercel bersifat stateless (serverless). Agar data yang Anda input di Google AI Studio muncul dan tersinkronisasi otomatis di Vercel, salin URL API di bawah ini dan tempel di input Vercel Anda, atau pasang sebagai env variable <code className="bg-slate-100 px-1 py-0.5 rounded text-red-600 font-mono text-[10px]">VITE_SYNC_SERVER_URL</code>.
+              </p>
+              
+              <div className="space-y-2 pt-1">
+                {/* Master URL copy section */}
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
+                    URL API Master (Gunakan ini untuk Vercel):
+                  </label>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="text"
+                      readOnly
+                      value={window.location.origin}
+                      className="bg-slate-50 border border-beige-border rounded text-[10px] px-2 py-1.5 w-full font-mono text-slate-500 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(window.location.origin);
+                        setCopiedSyncUrl(true);
+                        setTimeout(() => setCopiedSyncUrl(false), 2000);
+                      }}
+                      className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-beige-border text-[10px] font-brand uppercase font-bold text-slate-700 rounded transition-all shrink-0 flex items-center gap-1 cursor-pointer"
+                    >
+                      {copiedSyncUrl ? <CheckCircle className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+                      {copiedSyncUrl ? 'Tersalin' : 'Salin'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remote Sync Input for Vercel Client */}
+                <div className="space-y-1 pt-1">
+                  <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
+                    Sambungkan ke API Master (Tempel di Vercel Anda):
+                  </label>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="text"
+                      placeholder="Masukkan URL API Master (contoh: https://ais-pre-...run.app)"
+                      value={remoteSyncUrl}
+                      onChange={(e) => setRemoteSyncUrl(e.target.value)}
+                      className="bg-white border border-beige-border rounded text-[11px] px-2.5 py-1.5 w-full font-mono text-slate-700 focus:ring-1 focus:ring-green-primary focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleSaveRemoteSyncUrl(remoteSyncUrl)}
+                      className="px-3 py-1.5 bg-green-primary hover:bg-green-primary/90 text-white text-[10px] font-brand uppercase font-bold rounded transition-all shrink-0 cursor-pointer"
+                    >
+                      Hubungkan
+                    </button>
+                  </div>
+                  {remoteSyncUrl && (
+                    <p className="text-[9px] text-emerald-700 font-mono mt-1">
+                      ● Terhubung secara kustom ke: {remoteSyncUrl}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Column 2: File Export/Import */}
+            <div className="bg-white/50 border border-beige-border/60 rounded-lg p-4 space-y-3 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-green-primary uppercase tracking-wider font-brand">
+                  <FileSpreadsheet className="h-3.5 w-3.5 text-gold-accent" />
+                  Cadangan Offline (Ekspor & Impor JSON)
+                </div>
+                <p className="text-[11px] text-slate-600 leading-relaxed text-justify">
+                  Gunakan fitur cadangan luring ini untuk mengunduh seluruh transaksi kas koperasi ke dalam komputer Anda sebagai file JSON mandiri. Anda dapat memulihkan seluruh data ini di Vercel atau komputer lain kapan saja.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={handleExportData}
+                  className="px-3 py-2.5 bg-gold-accent hover:bg-amber-600 text-white rounded text-xs font-brand uppercase font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Ekspor JSON
+                </button>
+                
+                <label className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 border border-beige-border text-slate-700 rounded text-xs font-brand uppercase font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer text-center">
+                  <Upload className="h-3.5 w-3.5" />
+                  Impor JSON
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={handleImportData}
+                    className="hidden"
+                  />
+                </label>
+              </div>
             </div>
           </div>
         </div>
