@@ -31,6 +31,8 @@ import ManageProfit from './components/ManageProfit';
 import SHUCalculator from './components/SHUCalculator';
 import seedData from '../data/seed_data.json';
 
+declare const __APP_URL__: string;
+
 export default function App() {
   // Remote synchronization state
   const [remoteSyncUrl, setRemoteSyncUrl] = useState<string>(() => {
@@ -39,13 +41,37 @@ export default function App() {
   const [copiedSyncUrl, setCopiedSyncUrl] = useState<boolean>(false);
 
   const getApiUrl = (endpoint: string) => {
-    const envUrl = (import.meta as any).env?.VITE_SYNC_SERVER_URL;
-    const customSyncUrl = localStorage.getItem('koperasi_remote_sync_url') || envUrl;
+    // 1. Prioritize manual localStorage sync URL override
+    const customSyncUrl = localStorage.getItem('koperasi_remote_sync_url');
     if (customSyncUrl && customSyncUrl.trim() !== '') {
       const base = customSyncUrl.replace(/\/$/, '');
       const cleanEndpoint = '/' + endpoint.replace(/^\//, '');
       return `${base}${cleanEndpoint}`;
     }
+
+    // 2. Read baked-in AI Studio master URL from Vite config
+    let bakedUrl = '';
+    try {
+      bakedUrl = typeof __APP_URL__ !== 'undefined' ? __APP_URL__ : '';
+    } catch (e) {
+      // ignore
+    }
+
+    // 3. Auto-detect if we are running in local/dev vs external host (Vercel)
+    const isLocalOrDevelopment = 
+      window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1' || 
+      window.location.hostname.includes('.run.app') || 
+      window.location.hostname.includes('asia-east1.run.app');
+
+    // If running externally (e.g. Vercel) and has baked URL, route automatically!
+    if (!isLocalOrDevelopment && bakedUrl && bakedUrl.trim() !== '') {
+      const base = bakedUrl.replace(/\/$/, '');
+      const cleanEndpoint = '/' + endpoint.replace(/^\//, '');
+      return `${base}${cleanEndpoint}`;
+    }
+
+    // Default to relative path
     return endpoint;
   };
   // Core Cooperative state initialized from localStorage for instant, offline-safe load
@@ -191,9 +217,9 @@ export default function App() {
     }
   };
 
-  // Fetch full state from backend server on mount
-  const fetchState = async () => {
-    setIsLoading(true);
+  // Fetch full state from backend server with optional silent background mode
+  const fetchState = async (isSilent = false) => {
+    if (!isSilent) setIsLoading(true);
     try {
       const response = await fetch(getApiUrl('/api/koperasi'));
       if (response.ok) {
@@ -231,6 +257,25 @@ export default function App() {
                 },
                 localTime
               );
+            } else if (serverTime > localTime) {
+              // Server has newer data, update memory & local storage
+              setAnggotaList(data.anggota || []);
+              setSimpananList(data.simpanan || []);
+              setLabaUsahaList(data.labaUsaha || []);
+              setPengaturanSHU(data.pengaturanSHU || {
+                persenLabaPool: 45,
+                persenPoolSimpanan: 60,
+                persenPoolPengurus: 40
+              });
+              try {
+                localStorage.setItem('koperasi_local_data', JSON.stringify(data));
+              } catch (e) {
+                console.error(e);
+              }
+              useServerData = false;
+            } else {
+              // Equal timestamp, no force update to prevent input/cursor flickering
+              useServerData = false;
             }
           }
         } catch (e) {
@@ -254,10 +299,13 @@ export default function App() {
           }
         }
         
-        const activeAnggota = useServerData ? (data.anggota || []) : (JSON.parse(localStorage.getItem('koperasi_local_data') || '{}').anggota || []);
-        if (activeAnggota.length > 0) {
-          setSelectedMemberId(activeAnggota[0].id);
-        }
+        // Safely set selected member if none is active, using functional update to avoid closures
+        setSelectedMemberId((prev) => {
+          if (prev) return prev;
+          const activeAnggota = data.anggota || [];
+          return activeAnggota.length > 0 ? activeAnggota[0].id : '';
+        });
+        
         setSyncStatus('synced');
       } else {
         console.error('Failed to fetch data from backend');
@@ -267,12 +315,19 @@ export default function App() {
       console.error('Error fetching cooperative state:', err);
       setSyncStatus('error');
     } finally {
-      setIsLoading(false);
+      if (!isSilent) setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchState();
+
+    // Real-time automatic synchronization polling (every 5 seconds)
+    const interval = setInterval(() => {
+      fetchState(true);
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Reset database to initial seed defaults
@@ -650,25 +705,57 @@ export default function App() {
         <div className="mt-6 bg-cream-card border-2 border-beige-border rounded-xl p-5 shadow-sm">
           <h4 className="text-sm font-semibold text-green-primary font-display flex items-center gap-1.5 mb-4">
             <Cloud className="h-4 w-4 text-gold-accent animate-pulse" />
-            Sinkronisasi Cloud & Cadangan Data Koperasi (Multi-Platform)
+            Sinkronisasi Otomatis & Real-Time (Tanpa Ribet)
           </h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Column 1: API Sync */}
-            <div className="bg-white/50 border border-beige-border/60 rounded-lg p-4 space-y-3">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-green-primary uppercase tracking-wider font-brand">
-                <Database className="h-3.5 w-3.5 text-green-primary" />
-                Hubungkan Google AI Studio & Vercel
+            <div className="bg-white/50 border border-beige-border/60 rounded-lg p-4 space-y-3 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-green-primary uppercase tracking-wider font-brand">
+                  <Database className="h-3.5 w-3.5 text-green-primary" />
+                  Status Koneksi Database Utama
+                </div>
+                
+                {/* Auto detection badge */}
+                {(() => {
+                  const isLocalOrDev = 
+                    window.location.hostname === 'localhost' || 
+                    window.location.hostname === '127.0.0.1' || 
+                    window.location.hostname.includes('.run.app') || 
+                    window.location.hostname.includes('asia-east1.run.app');
+                  
+                  if (isLocalOrDev) {
+                    return (
+                      <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-3 py-2 rounded-lg flex items-center gap-2">
+                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-600 animate-ping inline-block shrink-0"></span>
+                        <span className="font-semibold">Master Server Aktif & Real-Time</span>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="bg-blue-50 border border-blue-200 text-blue-800 text-xs px-3 py-2 rounded-lg flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 inline-block shrink-0"></span>
+                          <span className="font-semibold">Terhubung Otomatis ke Master Cloud</span>
+                        </div>
+                        <p className="text-[10px] text-blue-600 font-sans">
+                          Sistem mendeteksi domain eksternal (Vercel) dan otomatis menyinkronkan data Anda secara real-time ke master database di Google AI Studio.
+                        </p>
+                      </div>
+                    );
+                  }
+                })()}
+
+                <p className="text-[11px] text-slate-600 leading-relaxed text-justify">
+                  Sistem sinkronisasi saat ini berjalan secara <strong>real-time (polling 5 detik)</strong>. Setiap kali Anda melakukan transaksi, menambah anggota, atau mengubah tabungan di mana saja, datanya langsung ter-update di kedua platform secara instan!
+                </p>
               </div>
-              <p className="text-[11px] text-slate-600 leading-relaxed text-justify">
-                Hosting Vercel bersifat stateless (serverless). Agar data yang Anda input di Google AI Studio muncul dan tersinkronisasi otomatis di Vercel, salin URL API di bawah ini dan tempel di input Vercel Anda, atau pasang sebagai env variable <code className="bg-slate-100 px-1 py-0.5 rounded text-red-600 font-mono text-[10px]">VITE_SYNC_SERVER_URL</code>.
-              </p>
               
-              <div className="space-y-2 pt-1">
-                {/* Master URL copy section */}
+              <div className="space-y-2 pt-2 border-t border-beige-border/40">
                 <div className="space-y-1">
                   <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
-                    URL API Master (Gunakan ini untuk Vercel):
+                    URL Master Server Koperasi:
                   </label>
                   <div className="flex gap-1.5">
                     <input
@@ -691,34 +778,6 @@ export default function App() {
                     </button>
                   </div>
                 </div>
-
-                {/* Remote Sync Input for Vercel Client */}
-                <div className="space-y-1 pt-1">
-                  <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
-                    Sambungkan ke API Master (Tempel di Vercel Anda):
-                  </label>
-                  <div className="flex gap-1.5">
-                    <input
-                      type="text"
-                      placeholder="Masukkan URL API Master (contoh: https://ais-pre-...run.app)"
-                      value={remoteSyncUrl}
-                      onChange={(e) => setRemoteSyncUrl(e.target.value)}
-                      className="bg-white border border-beige-border rounded text-[11px] px-2.5 py-1.5 w-full font-mono text-slate-700 focus:ring-1 focus:ring-green-primary focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleSaveRemoteSyncUrl(remoteSyncUrl)}
-                      className="px-3 py-1.5 bg-green-primary hover:bg-green-primary/90 text-white text-[10px] font-brand uppercase font-bold rounded transition-all shrink-0 cursor-pointer"
-                    >
-                      Hubungkan
-                    </button>
-                  </div>
-                  {remoteSyncUrl && (
-                    <p className="text-[9px] text-emerald-700 font-mono mt-1">
-                      ● Terhubung secara kustom ke: {remoteSyncUrl}
-                    </p>
-                  )}
-                </div>
               </div>
             </div>
 
@@ -727,10 +786,10 @@ export default function App() {
               <div className="space-y-2">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-green-primary uppercase tracking-wider font-brand">
                   <FileSpreadsheet className="h-3.5 w-3.5 text-gold-accent" />
-                  Cadangan Offline (Ekspor & Impor JSON)
+                  Cadangan Manual Offline (JSON)
                 </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed text-justify">
-                  Gunakan fitur cadangan luring ini untuk mengunduh seluruh transaksi kas koperasi ke dalam komputer Anda sebagai file JSON mandiri. Anda dapat memulihkan seluruh data ini di Vercel atau komputer lain kapan saja.
+                  Sebagai lapisan keamanan tambahan, Anda selalu dapat mengunduh seluruh database koperasi ke dalam file JSON lokal di komputer Anda, atau memulihkannya kapan saja secara manual.
                 </p>
               </div>
 
@@ -741,12 +800,12 @@ export default function App() {
                   className="px-3 py-2.5 bg-gold-accent hover:bg-amber-600 text-white rounded text-xs font-brand uppercase font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Download className="h-3.5 w-3.5" />
-                  Ekspor JSON
+                  Unduh JSON
                 </button>
                 
                 <label className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 border border-beige-border text-slate-700 rounded text-xs font-brand uppercase font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer text-center">
                   <Upload className="h-3.5 w-3.5" />
-                  Impor JSON
+                  Unggah JSON
                   <input
                     type="file"
                     accept=".json"
