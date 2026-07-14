@@ -57,6 +57,11 @@ export default function App() {
       // ignore
     }
 
+    // Fallback to the Google AI Studio master Shared URL if bakedUrl is empty (common in external Vercel builds)
+    if (!bakedUrl || bakedUrl.trim() === '') {
+      bakedUrl = 'https://ais-pre-4wuczjy7hi7powicgk6azu-477277126556.asia-east1.run.app';
+    }
+
     // 3. Auto-detect if we are running in local/dev vs external host (Vercel)
     const isLocalOrDevelopment = 
       window.location.hostname === 'localhost' || 
