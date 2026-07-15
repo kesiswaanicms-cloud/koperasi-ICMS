@@ -1,0 +1,2819 @@
+{
+  "anggota": [
+    {
+      "id": "m1",
+      "nama": "Huzen Rachmadi",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m2",
+      "nama": "Wildan Hakim Mahardhika",
+      "jabatan": "Pengurus",
+      "bobotPengurus": 15
+    },
+    {
+      "id": "m3",
+      "nama": "Hasanuddin Maulana",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m4",
+      "nama": "Yudi Setiadi",
+      "jabatan": "Pengurus",
+      "bobotPengurus": 30
+    },
+    {
+      "id": "m5",
+      "nama": "Agus Suherman",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m6",
+      "nama": "Yudi Suryadi",
+      "jabatan": "Pengurus",
+      "bobotPengurus": 15
+    },
+    {
+      "id": "m7",
+      "nama": "Mamat",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m8",
+      "nama": "Dian Kartika Sari",
+      "jabatan": "Pengurus",
+      "bobotPengurus": 20
+    },
+    {
+      "id": "m9",
+      "nama": "Zumrotul Arifin",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m10",
+      "nama": "Muhammad Rafi Fadillah",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m11",
+      "nama": "Nursaleh",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m12",
+      "nama": "Luluk Mikrajul Hikmah",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m13",
+      "nama": "Hendra Purnawan",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m14",
+      "nama": "Rahmawati",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m15",
+      "nama": "Nurhasanah",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m16",
+      "nama": "Ruslinda",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m17",
+      "nama": "Isra Tartyla",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m18",
+      "nama": "Rafly Dzikrul Hakim",
+      "jabatan": "Pengurus",
+      "bobotPengurus": 20
+    },
+    {
+      "id": "m19",
+      "nama": "Muhammad Astra",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m20",
+      "nama": "Winda Agustina",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m21",
+      "nama": "Ranti Oktaviani",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m22",
+      "nama": "Ade Rohman",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m23",
+      "nama": "Bekti Putra",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    },
+    {
+      "id": "m24",
+      "nama": "Dian Juniarti (Bunda Naura Kelas XI)",
+      "jabatan": "Anggota",
+      "bobotPengurus": 0
+    }
+  ],
+  "simpanan": [
+    {
+      "id": "p1",
+      "memberId": "m1",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p2",
+      "memberId": "m1",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p3",
+      "memberId": "m2",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p4",
+      "memberId": "m2",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p5",
+      "memberId": "m4",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p6",
+      "memberId": "m4",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p7",
+      "memberId": "m5",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p8",
+      "memberId": "m5",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p9",
+      "memberId": "m6",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p10",
+      "memberId": "m6",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p11",
+      "memberId": "m7",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p12",
+      "memberId": "m7",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p13",
+      "memberId": "m8",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p14",
+      "memberId": "m8",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p15",
+      "memberId": "m9",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p16",
+      "memberId": "m9",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p17",
+      "memberId": "m9",
+      "jenis": "pokok",
+      "periode": "Juni 2026",
+      "jumlah": -20000,
+      "tanggal": "2026-06-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p18",
+      "memberId": "m10",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p19",
+      "memberId": "m10",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p20",
+      "memberId": "m11",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p21",
+      "memberId": "m11",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p22",
+      "memberId": "m12",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p23",
+      "memberId": "m12",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p24",
+      "memberId": "m12",
+      "jenis": "pokok",
+      "periode": "Juni 2026",
+      "jumlah": -20000,
+      "tanggal": "2026-06-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p25",
+      "memberId": "m16",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p26",
+      "memberId": "m16",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p27",
+      "memberId": "m17",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p28",
+      "memberId": "m17",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p29",
+      "memberId": "m18",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p30",
+      "memberId": "m18",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p31",
+      "memberId": "m19",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p32",
+      "memberId": "m19",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p33",
+      "memberId": "m20",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p34",
+      "memberId": "m20",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p35",
+      "memberId": "m21",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p36",
+      "memberId": "m21",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p37",
+      "memberId": "m22",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p38",
+      "memberId": "m22",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p39",
+      "memberId": "m23",
+      "jenis": "pokok",
+      "periode": "April 2026",
+      "jumlah": 20000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p40",
+      "memberId": "m23",
+      "jenis": "pokok",
+      "periode": "Mei 2026",
+      "jumlah": 10000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "p41",
+      "memberId": "m24",
+      "jenis": "pokok",
+      "periode": "Maret 2025",
+      "jumlah": 100000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Pokok"
+    },
+    {
+      "id": "w1",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w2",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w3",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w4",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w5",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w6",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w7",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w8",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w9",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w10",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w11",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w12",
+      "memberId": "m1",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w13",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w14",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w15",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w16",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w17",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w18",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w19",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w20",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w21",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w22",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w23",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w24",
+      "memberId": "m2",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w25",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w26",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w27",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w28",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w29",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w30",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w31",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w32",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w33",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w34",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w35",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w36",
+      "memberId": "m4",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w38",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w39",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w40",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w41",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w42",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w43",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w44",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w45",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w46",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w47",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w48",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w49",
+      "memberId": "m5",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w50",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w51",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w52",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w53",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w54",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w55",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w56",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w57",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w58",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w59",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w60",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w61",
+      "memberId": "m6",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w62",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w63",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w64",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w65",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w66",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w67",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w68",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w69",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w70",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w71",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w72",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w73",
+      "memberId": "m7",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w74",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w75",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w76",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w77",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w78",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w79",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w80",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w81",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w82",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w83",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w84",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w85",
+      "memberId": "m8",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w86",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w87",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w88",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w89",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w90",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w91",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w92",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w93",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w94",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w95",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w96",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w97",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w98",
+      "memberId": "m9",
+      "jenis": "wajib",
+      "periode": "Juni 2026",
+      "jumlah": -330000,
+      "tanggal": "2026-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w99",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w100",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w101",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w102",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w103",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w104",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w105",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w106",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w107",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w108",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w109",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w110",
+      "memberId": "m10",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w111",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w112",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w113",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w114",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w115",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w116",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w117",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w118",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w119",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w120",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w121",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w122",
+      "memberId": "m11",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w123",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w124",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w125",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w126",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w127",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w128",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w129",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w130",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w131",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w132",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w133",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w134",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w135",
+      "memberId": "m12",
+      "jenis": "wajib",
+      "periode": "Juni 2026",
+      "jumlah": -330000,
+      "tanggal": "2026-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w136",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w137",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w138",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w139",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w140",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w141",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w142",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w143",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w144",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w145",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w146",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w147",
+      "memberId": "m16",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w148",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w149",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w150",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w151",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w152",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w153",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w154",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w155",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w156",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w157",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w158",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w159",
+      "memberId": "m17",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w160",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w161",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w162",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w163",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w164",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w165",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w166",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w167",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w168",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w169",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w170",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w171",
+      "memberId": "m18",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w172",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w173",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w174",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w175",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w176",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w177",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w178",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w179",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w180",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w181",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w182",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w183",
+      "memberId": "m19",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w184",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w185",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w186",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w187",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w188",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w189",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w190",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w191",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w192",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w193",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w194",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w195",
+      "memberId": "m20",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w196",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w197",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w198",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w199",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w200",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w201",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w202",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w203",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w204",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w205",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w206",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w207",
+      "memberId": "m21",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w208",
+      "memberId": "m22",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w209",
+      "memberId": "m22",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w210",
+      "memberId": "m22",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w211",
+      "memberId": "m22",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w212",
+      "memberId": "m22",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w213",
+      "memberId": "m22",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w214",
+      "memberId": "m22",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w215",
+      "memberId": "m23",
+      "jenis": "wajib",
+      "periode": "April 2026",
+      "jumlah": 80000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w216",
+      "memberId": "m23",
+      "jenis": "wajib",
+      "periode": "Mei 2026",
+      "jumlah": 40000,
+      "tanggal": "2026-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w217",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "Maret 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w218",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "April 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-04-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w219",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "Mei 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-05-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w220",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "Juni 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-06-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w221",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "Juli 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-07-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w222",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "Agustus 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-08-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w223",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "September 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-09-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w224",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "Oktober 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-10-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w225",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "November 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-11-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "w226",
+      "memberId": "m24",
+      "jenis": "wajib",
+      "periode": "Desember 2025",
+      "jumlah": 25000,
+      "tanggal": "2025-12-10",
+      "catatan": "Setoran Simpanan Wajib"
+    },
+    {
+      "id": "ss1",
+      "memberId": "m1",
+      "jenis": "sukarela",
+      "periode": "Januari 2025",
+      "jumlah": 1125000,
+      "tanggal": "2025-01-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss2",
+      "memberId": "m1",
+      "jenis": "sukarela",
+      "periode": "Maret 2025",
+      "jumlah": 1000000,
+      "tanggal": "2025-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss3",
+      "memberId": "m1",
+      "jenis": "sukarela",
+      "periode": "Januari 2026",
+      "jumlah": 1000000,
+      "tanggal": "2026-01-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss4",
+      "memberId": "m1",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 307778.39,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss5",
+      "memberId": "m2",
+      "jenis": "sukarela",
+      "periode": "Februari 2025",
+      "jumlah": 125000,
+      "tanggal": "2025-02-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss6",
+      "memberId": "m2",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 70173.47,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss7",
+      "memberId": "m4",
+      "jenis": "sukarela",
+      "periode": "Januari 2025",
+      "jumlah": 625000,
+      "tanggal": "2025-01-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss8",
+      "memberId": "m4",
+      "jenis": "sukarela",
+      "periode": "Januari 2026",
+      "jumlah": 1000000,
+      "tanggal": "2026-01-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss9",
+      "memberId": "m4",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 156545.81,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss10",
+      "memberId": "m4",
+      "jenis": "sukarela",
+      "periode": "April 2026",
+      "jumlah": 150000,
+      "tanggal": "2026-04-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss11",
+      "memberId": "m4",
+      "jenis": "sukarela",
+      "periode": "2026-06",
+      "jumlah": -1353810,
+      "tanggal": "2026-06-10",
+      "catatan": "Penarikan Simpanan Sukarela"
+    },
+    {
+      "id": "ss13",
+      "memberId": "m5",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss14",
+      "memberId": "m6",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 53974.61,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss15",
+      "memberId": "m7",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss16",
+      "memberId": "m8",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 61166.91,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss17",
+      "memberId": "m10",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss18",
+      "memberId": "m11",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss19",
+      "memberId": "m16",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss20",
+      "memberId": "m17",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss21",
+      "memberId": "m18",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 61166.91,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss22",
+      "memberId": "m19",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss23",
+      "memberId": "m20",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss24",
+      "memberId": "m21",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 32397.73,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss25",
+      "memberId": "m22",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 16198.86,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss26",
+      "memberId": "m24",
+      "jenis": "sukarela",
+      "periode": "Januari 2025",
+      "jumlah": 100000,
+      "tanggal": "2025-01-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    },
+    {
+      "id": "ss27",
+      "memberId": "m24",
+      "jenis": "sukarela",
+      "periode": "Feb-Mar 2026",
+      "jumlah": 42117.04,
+      "tanggal": "2026-03-10",
+      "catatan": "Setoran Simpanan Sukarela"
+    }
+  ],
+  "labaUsaha": [
+    {
+      "id": "l_1783931080090_ncxl0aj",
+      "namaUsaha": "Wildan Hakim Mahardhika",
+      "pengeluaran": 13400000,
+      "penerimaan": 0,
+      "tanggal": "2026-06-01",
+      "catatan": "Pinjaman untuk Pembelian Motor Vario",
+      "kategori": "ksp_pinjaman"
+    },
+    {
+      "id": "l1",
+      "namaUsaha": "Investasi Pengadaan Kurma di Bulan Ramadhan 1447 H",
+      "pengeluaran": 10000000,
+      "penerimaan": 10600000,
+      "tanggal": "2026-04-10",
+      "catatan": "Laba kegiatan Investasi Pengadaan Kurma di Bulan Ramadhan 1447 H"
+    },
+    {
+      "id": "l2",
+      "namaUsaha": "Investasi Pengadaan Hewan di Idul Adha 1447 H",
+      "pengeluaran": 11000000,
+      "penerimaan": 11660000,
+      "tanggal": "2026-05-15",
+      "catatan": "Laba kegiatan Investasi Pengadaan Hewan di Idul Adha 1447 H"
+    },
+    {
+      "id": "l4",
+      "namaUsaha": "Makanan dan minuman ringan (dari Indogrosir)",
+      "pengeluaran": 1625800,
+      "penerimaan": 1741140,
+      "tanggal": "2026-07-08",
+      "catatan": "Laba kegiatan Makanan dan minuman ringan (dari Indogrosir)"
+    }
+  ],
+  "pengaturanSHU": {
+    "persenLabaPool": 40,
+    "persenPoolSimpanan": 5,
+    "persenPoolPengurus": 95
+  },
+  "lastUpdated": 1784026495394
+}

@@ -22,6 +22,9 @@ import {
   Settings
 } from 'lucide-react';
 
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { db } from './firebase';
+
 import { KoperasiData, Anggota, Simpanan, LabaUsaha, PengaturanSHU } from './types';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -172,7 +175,7 @@ export default function App() {
     }
   }, []);
 
-  // Save changes to the backend Express server and localStorage
+  // Save changes to Firestore
   const saveChangesToServer = async (
     updatedAnggota: Anggota[],
     updatedSimpanan: Simpanan[],
@@ -200,22 +203,11 @@ export default function App() {
     }
 
     try {
-      const response = await fetch(getApiUrl('/api/koperasi/sync'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        setSyncStatus('synced');
-      } else {
-        console.error('Sync failed');
-        setSyncStatus('error');
-      }
+      const docRef = doc(db, 'koperasi', 'utama');
+      await setDoc(docRef, payload);
+      setSyncStatus('synced');
     } catch (err) {
-      console.error('Error syncing changes with server:', err);
+      console.error('Error syncing changes with Firestore:', err);
       setSyncStatus('error');
     } finally {
       setIsSyncing(false);
@@ -224,115 +216,59 @@ export default function App() {
 
   // Fetch full state from backend server with optional silent background mode
   const fetchState = async (isSilent = false) => {
-    if (!isSilent) setIsLoading(true);
-    try {
-      const response = await fetch(getApiUrl('/api/koperasi'));
-      if (response.ok) {
-        const data: KoperasiData = await response.json();
+    // Left as no-op for compatibility with UI components.
+    // Real-time synchronization is handled by onSnapshot below.
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    const docRef = doc(db, 'koperasi', 'utama');
+    
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data() as KoperasiData;
         
-        let useServerData = true;
+        setAnggotaList(data.anggota || []);
+        setSimpananList(data.simpanan || []);
+        setLabaUsahaList(data.labaUsaha || []);
+        setPengaturanSHU(data.pengaturanSHU || {
+          persenLabaPool: 45,
+          persenPoolSimpanan: 60,
+          persenPoolPengurus: 40
+        });
+        
         try {
-          const localSaved = localStorage.getItem('koperasi_local_data');
-          if (localSaved) {
-            const localData = JSON.parse(localSaved);
-            const localTime = localData.lastUpdated || 0;
-            const serverTime = data.lastUpdated || 0;
-            
-            // If local storage has a newer version of the data, prefer it and sync it to the server!
-            if (localTime > serverTime) {
-              useServerData = false;
-              setAnggotaList(localData.anggota || []);
-              setSimpananList(localData.simpanan || []);
-              setLabaUsahaList(localData.labaUsaha || []);
-              setPengaturanSHU(localData.pengaturanSHU || {
-                persenLabaPool: 45,
-                persenPoolSimpanan: 60,
-                persenPoolPengurus: 40
-              });
-              
-              // Restore backend database from client
-              saveChangesToServer(
-                localData.anggota || [],
-                localData.simpanan || [],
-                localData.labaUsaha || [],
-                localData.pengaturanSHU || {
-                  persenLabaPool: 45,
-                  persenPoolSimpanan: 60,
-                  persenPoolPengurus: 40
-                },
-                localTime
-              );
-            } else if (serverTime > localTime) {
-              // Server has newer data, update memory & local storage
-              setAnggotaList(data.anggota || []);
-              setSimpananList(data.simpanan || []);
-              setLabaUsahaList(data.labaUsaha || []);
-              setPengaturanSHU(data.pengaturanSHU || {
-                persenLabaPool: 45,
-                persenPoolSimpanan: 60,
-                persenPoolPengurus: 40
-              });
-              try {
-                localStorage.setItem('koperasi_local_data', JSON.stringify(data));
-              } catch (e) {
-                console.error(e);
-              }
-              useServerData = false;
-            } else {
-              // Equal timestamp, no force update to prevent input/cursor flickering
-              useServerData = false;
-            }
-          }
+          localStorage.setItem('koperasi_local_data', JSON.stringify(data));
         } catch (e) {
-          console.error('Error reconciling data with localStorage:', e);
+          console.error(e);
         }
 
-        if (useServerData) {
-          setAnggotaList(data.anggota || []);
-          setSimpananList(data.simpanan || []);
-          setLabaUsahaList(data.labaUsaha || []);
-          setPengaturanSHU(data.pengaturanSHU || {
-            persenLabaPool: 45,
-            persenPoolSimpanan: 60,
-            persenPoolPengurus: 40
-          });
-          
-          try {
-            localStorage.setItem('koperasi_local_data', JSON.stringify(data));
-          } catch (e) {
-            console.error(e);
-          }
-        }
-        
-        // Safely set selected member if none is active, using functional update to avoid closures
         setSelectedMemberId((prev) => {
           if (prev) return prev;
           const activeAnggota = data.anggota || [];
           return activeAnggota.length > 0 ? activeAnggota[0].id : '';
         });
-        
+
         setSyncStatus('synced');
       } else {
-        console.error('Failed to fetch data from backend');
-        setSyncStatus('error');
+        // Document doesn't exist, maybe first time setup
+        const payload: KoperasiData = {
+          anggota: anggotaList,
+          simpanan: simpananList,
+          labaUsaha: labaUsahaList,
+          pengaturanSHU: pengaturanSHU,
+          lastUpdated: Date.now()
+        };
+        setDoc(docRef, payload).catch(console.error);
       }
-    } catch (err) {
-      console.error('Error fetching cooperative state:', err);
+      setIsLoading(false);
+    }, (error) => {
+      console.error("Error listening to Firestore:", error);
       setSyncStatus('error');
-    } finally {
-      if (!isSilent) setIsLoading(false);
-    }
-  };
+      setIsLoading(false);
+    });
 
-  useEffect(() => {
-    fetchState();
-
-    // Real-time automatic synchronization polling (every 5 seconds)
-    const interval = setInterval(() => {
-      fetchState(true);
-    }, 5000);
-
-    return () => clearInterval(interval);
+    return () => unsubscribe();
   }, []);
 
   // Reset database to initial seed defaults
@@ -344,35 +280,34 @@ export default function App() {
     setIsSyncing(true);
     setSyncStatus('saving');
     try {
-      const response = await fetch(getApiUrl('/api/koperasi/reset'), {
-        method: 'POST'
-      });
-      if (response.ok) {
-        const result = await response.json();
-        
-        // Remove locally stored state so we start fresh from seed
-        try {
-          localStorage.removeItem('koperasi_local_data');
-        } catch (e) {
-          console.error('Failed to clear localStorage:', e);
-        }
-
-        setAnggotaList(result.data.anggota);
-        setSimpananList(result.data.simpanan);
-        setLabaUsahaList(result.data.labaUsaha);
-        setPengaturanSHU(result.data.pengaturanSHU);
-        if (result.data.anggota && result.data.anggota.length > 0) {
-          setSelectedMemberId(result.data.anggota[0].id);
-        }
-        setSyncStatus('synced');
-        alert('Database koperasi berhasil di-reset!');
-      } else {
-        alert('Gagal me-reset database koperasi.');
-        setSyncStatus('error');
+      const docRef = doc(db, 'koperasi', 'utama');
+      
+      const payload: KoperasiData = {
+        anggota: (seedData as any).anggota || [],
+        simpanan: (seedData as any).simpanan || [],
+        labaUsaha: (seedData as any).labaUsaha || [],
+        pengaturanSHU: (seedData as any).pengaturanSHU || {
+          persenLabaPool: 45,
+          persenPoolSimpanan: 60,
+          persenPoolPengurus: 40
+        },
+        lastUpdated: Date.now()
+      };
+      
+      await setDoc(docRef, payload);
+      
+      // Remove locally stored state so we start fresh from seed
+      try {
+        localStorage.removeItem('koperasi_local_data');
+      } catch (e) {
+        console.error('Failed to clear localStorage:', e);
       }
+
+      alert('Database koperasi berhasil di-reset!');
     } catch (err) {
       console.error('Error resetting database:', err);
       setSyncStatus('error');
+      alert('Gagal me-reset database koperasi.');
     } finally {
       setIsSyncing(false);
     }
