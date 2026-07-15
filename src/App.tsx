@@ -582,24 +582,7 @@ export default function App() {
         {/* Dynamic viewport renderer */}
         {renderCurrentTab()}
 
-        {/* Administration tools area (only visible to authenticated Admin) */}
-        {currentUserRole === 'admin' && (
-          <div className="mt-12 bg-cream-card border-2 border-beige-border p-5 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
-            <div>
-              <h4 className="text-sm font-semibold text-red-900 font-display">Alat Pemeliharaan Kasir Koperasi ICMS</h4>
-              <p className="text-xs text-slate-600 font-sans mt-0.5">
-                Gunakan menu di samping jika Anda ingin me-reset seluruh database koperasi atau memulihkan data dummy simulasi untuk evaluasi.
-              </p>
-            </div>
-            <button
-              id="admin-reset-db-btn"
-              onClick={handleResetData}
-              className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white text-xs font-brand uppercase font-bold rounded shadow transition-all shrink-0"
-            >
-              Reset ke Database Bawaan
-            </button>
-          </div>
-        )}
+
 
         {/* Shared Transparency Portal section (Always visible at the bottom for beautiful usability!) */}
         <div className="mt-12 bg-cream-card border-2 border-beige-border rounded-xl p-5 shadow-sm">
@@ -641,122 +624,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Cloud Sync & Backup Panel */}
-        <div className="mt-6 bg-cream-card border-2 border-beige-border rounded-xl p-5 shadow-sm">
-          <h4 className="text-sm font-semibold text-green-primary font-display flex items-center gap-1.5 mb-4">
-            <Cloud className="h-4 w-4 text-gold-accent animate-pulse" />
-            Sinkronisasi Otomatis & Real-Time (Tanpa Ribet)
-          </h4>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Column 1: API Sync */}
-            <div className="bg-white/50 border border-beige-border/60 rounded-lg p-4 space-y-3 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-green-primary uppercase tracking-wider font-brand">
-                  <Database className="h-3.5 w-3.5 text-green-primary" />
-                  Status Koneksi Database Utama
-                </div>
-                
-                {/* Auto detection badge */}
-                {(() => {
-                  const isLocalOrDev = 
-                    window.location.hostname === 'localhost' || 
-                    window.location.hostname === '127.0.0.1' || 
-                    window.location.hostname.includes('.run.app') || 
-                    window.location.hostname.includes('asia-east1.run.app');
-                  
-                  if (isLocalOrDev) {
-                    return (
-                      <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-3 py-2 rounded-lg flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-600 animate-ping inline-block shrink-0"></span>
-                        <span className="font-semibold">Master Server Aktif & Real-Time</span>
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div className="bg-blue-50 border border-blue-200 text-blue-800 text-xs px-3 py-2 rounded-lg flex flex-col gap-1">
-                        <div className="flex items-center gap-2">
-                          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 inline-block shrink-0"></span>
-                          <span className="font-semibold">Terhubung Otomatis ke Master Cloud</span>
-                        </div>
-                        <p className="text-[10px] text-blue-600 font-sans">
-                          Sistem mendeteksi domain eksternal (Vercel) dan otomatis menyinkronkan data Anda secara real-time ke master database di Google AI Studio.
-                        </p>
-                      </div>
-                    );
-                  }
-                })()}
 
-                <p className="text-[11px] text-slate-600 leading-relaxed text-justify">
-                  Sistem sinkronisasi saat ini berjalan secara <strong>real-time (polling 5 detik)</strong>. Setiap kali Anda melakukan transaksi, menambah anggota, atau mengubah tabungan di mana saja, datanya langsung ter-update di kedua platform secara instan!
-                </p>
-              </div>
-              
-              <div className="space-y-2 pt-2 border-t border-beige-border/40">
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
-                    URL Master Server Koperasi:
-                  </label>
-                  <div className="flex gap-1.5">
-                    <input
-                      type="text"
-                      readOnly
-                      value={window.location.origin}
-                      className="bg-slate-50 border border-beige-border rounded text-[10px] px-2 py-1.5 w-full font-mono text-slate-500 focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(window.location.origin);
-                        setCopiedSyncUrl(true);
-                        setTimeout(() => setCopiedSyncUrl(false), 2000);
-                      }}
-                      className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-beige-border text-[10px] font-brand uppercase font-bold text-slate-700 rounded transition-all shrink-0 flex items-center gap-1 cursor-pointer"
-                    >
-                      {copiedSyncUrl ? <CheckCircle className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
-                      {copiedSyncUrl ? 'Tersalin' : 'Salin'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Column 2: File Export/Import */}
-            <div className="bg-white/50 border border-beige-border/60 rounded-lg p-4 space-y-3 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-green-primary uppercase tracking-wider font-brand">
-                  <FileSpreadsheet className="h-3.5 w-3.5 text-gold-accent" />
-                  Cadangan Manual Offline (JSON)
-                </div>
-                <p className="text-[11px] text-slate-600 leading-relaxed text-justify">
-                  Sebagai lapisan keamanan tambahan, Anda selalu dapat mengunduh seluruh database koperasi ke dalam file JSON lokal di komputer Anda, atau memulihkannya kapan saja secara manual.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-3">
-                <button
-                  type="button"
-                  onClick={handleExportData}
-                  className="px-3 py-2.5 bg-gold-accent hover:bg-amber-600 text-white rounded text-xs font-brand uppercase font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
-                >
-                  <Download className="h-3.5 w-3.5" />
-                  Unduh JSON
-                </button>
-                
-                <label className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 border border-beige-border text-slate-700 rounded text-xs font-brand uppercase font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer text-center">
-                  <Upload className="h-3.5 w-3.5" />
-                  Unggah JSON
-                  <input
-                    type="file"
-                    accept=".json"
-                    onChange={handleImportData}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
 
       </main>
 
