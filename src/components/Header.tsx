@@ -39,7 +39,8 @@ export default function Header({
     { id: 'anggota', label: 'Buku Anggota' },
     { id: 'simpanan', label: 'Ledger Simpanan' },
     { id: 'laba', label: 'Laba Usaha' },
-    { id: 'shu', label: 'Kalkulator SHU' }
+    { id: 'shu', label: 'Kalkulator SHU' },
+    { id: 'laporan', label: 'Laporan Keuangan' }
   ];
 
   const handleAdminLogin = (e: React.FormEvent) => {

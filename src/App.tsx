@@ -32,6 +32,7 @@ import ManageMembers from './components/ManageMembers';
 import ManageSavings from './components/ManageSavings';
 import ManageProfit from './components/ManageProfit';
 import SHUCalculator from './components/SHUCalculator';
+import FinancialReports from './components/FinancialReports';
 import seedData from '../data/seed_data.json';
 
 declare const __APP_URL__: string;
@@ -502,6 +503,12 @@ export default function App() {
             setPengaturanSHU={updatePengaturanSHU}
             currentUserRole={currentUserRole}
             selectedMemberId={selectedMemberId}
+          />
+        );
+      case 'laporan':
+        return (
+          <FinancialReports 
+            data={{ anggota: anggotaList, simpanan: simpananList, labaUsaha: labaUsahaList, pengaturanSHU }}
           />
         );
       default:
