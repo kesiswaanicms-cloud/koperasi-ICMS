@@ -157,9 +157,11 @@ export default function App() {
   });
   
   // Connection and synchronization states
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // Connection and synchronization states - default to false for instant <100ms load from localStorage/seedData
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [syncStatus, setSyncStatus] = useState<'synced' | 'saving' | 'error'>('synced');
+  const [syncErrorMessage, setSyncErrorMessage] = useState<string>('');
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
 
   // Parse URL query parameter for role/mode on startup
@@ -186,6 +188,7 @@ export default function App() {
   ) => {
     setIsSyncing(true);
     setSyncStatus('saving');
+    setSyncErrorMessage('');
     const timestamp = overrideTimestamp || Date.now();
 
     const payload: KoperasiData = {
@@ -207,22 +210,44 @@ export default function App() {
       const docRef = doc(db, 'koperasi', 'utama');
       await setDoc(docRef, payload);
       setSyncStatus('synced');
-    } catch (err) {
+      setSyncErrorMessage('');
+    } catch (err: any) {
       console.error('Error syncing changes with Firestore:', err);
       setSyncStatus('error');
+      setSyncErrorMessage(err?.message || 'Gagal menyimpan ke Firestore Cloud');
     } finally {
       setIsSyncing(false);
     }
   };
 
-  // Fetch full state from backend server with optional silent background mode
-  const fetchState = async (isSilent = false) => {
-    // Left as no-op for compatibility with UI components.
-    // Real-time synchronization is handled by onSnapshot below.
+  // Manual cloud synchronization trigger
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    setSyncStatus('saving');
+    setSyncErrorMessage('');
+    try {
+      const docRef = doc(db, 'koperasi', 'utama');
+      const payload: KoperasiData = {
+        anggota: anggotaList,
+        simpanan: simpananList,
+        labaUsaha: labaUsahaList,
+        pengaturanSHU: pengaturanSHU,
+        lastUpdated: Date.now()
+      };
+      await setDoc(docRef, payload);
+      setSyncStatus('synced');
+      setSyncErrorMessage('');
+    } catch (err: any) {
+      console.error('Manual sync failed:', err);
+      setSyncStatus('error');
+      setSyncErrorMessage(err?.message || 'Gagal tersambung ke Cloud Firestore');
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
+  // Background real-time synchronization with Firestore
   useEffect(() => {
-    setIsLoading(true);
     const docRef = doc(db, 'koperasi', 'utama');
     
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
@@ -251,8 +276,9 @@ export default function App() {
         });
 
         setSyncStatus('synced');
+        setSyncErrorMessage('');
       } else {
-        // Document doesn't exist, maybe first time setup
+        // Document doesn't exist yet, initialize first time setup
         const payload: KoperasiData = {
           anggota: anggotaList,
           simpanan: simpananList,
@@ -262,11 +288,10 @@ export default function App() {
         };
         setDoc(docRef, payload).catch(console.error);
       }
-      setIsLoading(false);
     }, (error) => {
       console.error("Error listening to Firestore:", error);
       setSyncStatus('error');
-      setIsLoading(false);
+      setSyncErrorMessage(error?.message || 'Akses Firestore terhalang / offline');
     });
 
     return () => unsubscribe();
@@ -538,16 +563,24 @@ export default function App() {
       {/* Dynamic top syncing status strip */}
       <div className="bg-green-primary text-white text-[10px] font-mono px-4 py-1.5 border-b border-gold-accent">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span className={`inline-block w-2 h-2 rounded-full ${
               syncStatus === 'synced' ? 'bg-emerald-400 animate-pulse' :
               syncStatus === 'saving' ? 'bg-amber-400 animate-pulse' : 'bg-red-500'
             }`}></span>
             <span className="tracking-wider">
-              {syncStatus === 'synced' && 'KONEKSI SERVER AKTIF - DATA TERSINKRONISASI'}
-              {syncStatus === 'saving' && 'MENYIMPAN PERUBAHAN KE SERVER KAS...'}
-              {syncStatus === 'error' && 'WARNING: KONEKSI TIMEOUT - REKAP LOKAL DIGUNAKAN'}
+              {syncStatus === 'synced' && 'KONEKSI CLOUD FIRESTORE AKTIF - DATA TERSINKRONISASI REAL-TIME'}
+              {syncStatus === 'saving' && 'MENYIMPAN PERUBAHAN KE CLOUD FIRESTORE...'}
+              {syncStatus === 'error' && `DATABASE CLOUD UNREACHABLE: ${syncErrorMessage || 'MENGGUNAKAN CACHE LOKAL'}`}
             </span>
+            {syncStatus === 'error' && (
+              <button 
+                onClick={handleManualSync} 
+                className="ml-2 px-1.5 py-0.5 bg-amber-500 hover:bg-amber-600 text-white font-sans rounded text-[9px] font-bold uppercase transition-all"
+              >
+                🔄 Coba Sinkronkan Ulang
+              </button>
+            )}
           </div>
           <div className="hidden sm:flex items-center gap-3">
             <span>ZONA WAKTU: WIB / WITA (UTC+7/8)</span>
@@ -579,7 +612,7 @@ export default function App() {
         selectedMemberId={selectedMemberId}
         setSelectedMemberId={setSelectedMemberId}
         anggotaList={anggotaList}
-        onSync={fetchState}
+        onSync={handleManualSync}
         isSyncing={isSyncing}
       />
 
