@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Landmark, 
   HelpCircle, 
@@ -139,6 +139,18 @@ export default function App() {
       persenPoolPengurus: 40
     };
   });
+
+  // Refs that always hold the latest state — used by update wrappers to avoid stale closures
+  const anggotaRef = useRef<Anggota[]>(anggotaList);
+  const simpananRef = useRef<Simpanan[]>(simpananList);
+  const labaRef = useRef<LabaUsaha[]>(labaUsahaList);
+  const pengaturanRef = useRef<PengaturanSHU>(pengaturanSHU);
+
+  // Keep refs in sync with state on every render
+  useEffect(() => { anggotaRef.current = anggotaList; }, [anggotaList]);
+  useEffect(() => { simpananRef.current = simpananList; }, [simpananList]);
+  useEffect(() => { labaRef.current = labaUsahaList; }, [labaUsahaList]);
+  useEffect(() => { pengaturanRef.current = pengaturanSHU; }, [pengaturanSHU]);
 
   // UI state
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
@@ -424,11 +436,13 @@ export default function App() {
     }
   };
 
-  // Wrappers to handle states and automatically push to server on updates
+  // Wrappers to handle states and automatically push to server on updates.
+  // Use refs (not closed-over state) to always pass the LATEST slice values to
+  // saveChangesToServer, preventing stale-closure overwrites on Firestore.
   const updateAnggotaList = (updater: Anggota[] | ((prev: Anggota[]) => Anggota[])) => {
     setAnggotaList((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
-      saveChangesToServer(next, simpananList, labaUsahaList, pengaturanSHU);
+      saveChangesToServer(next, simpananRef.current, labaRef.current, pengaturanRef.current);
       return next;
     });
   };
@@ -436,7 +450,7 @@ export default function App() {
   const updateSimpananList = (updater: Simpanan[] | ((prev: Simpanan[]) => Simpanan[])) => {
     setSimpananList((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
-      saveChangesToServer(anggotaList, next, labaUsahaList, pengaturanSHU);
+      saveChangesToServer(anggotaRef.current, next, labaRef.current, pengaturanRef.current);
       return next;
     });
   };
@@ -444,7 +458,7 @@ export default function App() {
   const updateLabaUsahaList = (updater: LabaUsaha[] | ((prev: LabaUsaha[]) => LabaUsaha[])) => {
     setLabaUsahaList((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
-      saveChangesToServer(anggotaList, simpananList, next, pengaturanSHU);
+      saveChangesToServer(anggotaRef.current, simpananRef.current, next, pengaturanRef.current);
       return next;
     });
   };
@@ -457,7 +471,7 @@ export default function App() {
       const nextLaba = typeof labaUpdater === 'function' ? labaUpdater(prevLaba) : labaUpdater;
       setSimpananList((prevSimpanan) => {
         const nextSimpanan = typeof simpananUpdater === 'function' ? simpananUpdater(prevSimpanan) : simpananUpdater;
-        saveChangesToServer(anggotaList, nextSimpanan, nextLaba, pengaturanSHU);
+        saveChangesToServer(anggotaRef.current, nextSimpanan, nextLaba, pengaturanRef.current);
         return nextSimpanan;
       });
       return nextLaba;
@@ -467,7 +481,7 @@ export default function App() {
   const updatePengaturanSHU = (updater: PengaturanSHU | ((prev: PengaturanSHU) => PengaturanSHU)) => {
     setPengaturanSHU((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
-      saveChangesToServer(anggotaList, simpananList, labaUsahaList, next);
+      saveChangesToServer(anggotaRef.current, simpananRef.current, labaRef.current, next);
       return next;
     });
   };

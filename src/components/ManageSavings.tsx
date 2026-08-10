@@ -16,10 +16,23 @@ import {
   AlertTriangle,
   FolderDot,
   Edit2,
-  X
+  X,
+  FileSpreadsheet,
+  Upload,
+  Download,
+  CheckSquare,
+  Square,
+  Check,
+  CheckCircle
 } from 'lucide-react';
 import { Simpanan, Anggota, JenisSimpanan } from '../types';
 import { formatRupiah, getMemberSavingsBreakdown } from '../utils/format';
+import { 
+  downloadCsv, 
+  generateSavingsCsvTemplate, 
+  parseSavingsCsv, 
+  ParsedSavingsRow 
+} from '../utils/csvHelpers';
 
 interface ManageSavingsProps {
   simpananList: Simpanan[];
@@ -31,7 +44,7 @@ interface ManageSavingsProps {
 export default function ManageSavings({
   simpananList,
   setSimpananList,
-  anggotaList,
+  anggotaList = [],
   currentUserRole
 }: ManageSavingsProps) {
   const isAdmin = currentUserRole === 'admin';
@@ -61,6 +74,155 @@ export default function ManageSavings({
   const [errorMsg, setErrorMsg] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterJenis, setFilterJenis] = useState<string>('all');
+
+  // Bulk Input Modal State
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [bulkActiveTab, setBulkActiveTab] = useState<'grid' | 'csv'>('grid');
+  const [bulkJenis, setBulkJenis] = useState<JenisSimpanan>('wajib');
+  const [bulkPeriode, setBulkPeriode] = useState(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  });
+  const [bulkTanggal, setBulkTanggal] = useState(() => new Date().toISOString().split('T')[0]);
+  const [bulkDefaultAmount, setBulkDefaultAmount] = useState('50000');
+  const [bulkGridRows, setBulkGridRows] = useState<Record<string, { selected: boolean; amount: string; note: string }>>({});
+  
+  // CSV Import state
+  const [csvParsedRows, setCsvParsedRows] = useState<ParsedSavingsRow[]>([]);
+  const [csvFileName, setCsvFileName] = useState('');
+  const [bulkSuccessMsg, setBulkSuccessMsg] = useState('');
+
+  // Open Bulk Modal
+  const handleOpenBulkModal = () => {
+    setIsBulkModalOpen(true);
+    setBulkSuccessMsg('');
+    const initialRows: Record<string, { selected: boolean; amount: string; note: string }> = {};
+    (anggotaList || []).forEach(member => {
+      if (member && member.id) {
+        initialRows[member.id] = {
+          selected: true,
+          amount: bulkDefaultAmount || '50000',
+          note: `Setoran ${bulkJenis} (${bulkPeriode})`
+        };
+      }
+    });
+    setBulkGridRows(initialRows);
+    setCsvParsedRows([]);
+    setCsvFileName('');
+  };
+
+  // Apply default amount to all selected grid rows
+  const handleApplyDefaultAmount = () => {
+    setBulkGridRows(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(id => {
+        next[id] = {
+          ...next[id],
+          amount: bulkDefaultAmount || '0',
+          note: `Setoran ${bulkJenis} (${bulkPeriode})`
+        };
+      });
+      return next;
+    });
+  };
+
+  // Toggle select all
+  const handleToggleSelectAll = (select: boolean) => {
+    setBulkGridRows(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(id => {
+        next[id] = { ...next[id], selected: select };
+      });
+      return next;
+    });
+  };
+
+  // Submit Grid Bulk Transaction
+  const handleProcessBulkGrid = () => {
+    const selectedEntries = Object.entries(bulkGridRows).filter(([_, data]) => data && data.selected);
+    if (selectedEntries.length === 0) {
+      alert('Pilih setidaknya 1 anggota untuk diproses.');
+      return;
+    }
+
+    const newTransactions: Simpanan[] = [];
+    const now = Date.now();
+    let index = 0;
+
+    for (const [memberId, data] of selectedEntries) {
+      const amtStr = String(data?.amount || '0').replace(/[^0-9]/g, '');
+      const amt = parseInt(amtStr, 10) || 0;
+      if (amt <= 0) continue;
+
+      const memberName = (anggotaList || []).find(m => m.id === memberId)?.nama || '';
+      const noteStr = String(data?.note || '').trim();
+      newTransactions.push({
+        id: `s_bulk_${now}_${index++}_${Math.random().toString(36).substring(2, 6)}`,
+        memberId,
+        jenis: bulkJenis,
+        periode: bulkPeriode,
+        jumlah: amt,
+        tanggal: bulkTanggal,
+        catatan: noteStr || `Setoran ${bulkJenis} - ${memberName} (${bulkPeriode})`
+      });
+    }
+
+    if (newTransactions.length === 0) {
+      alert('Tidak ada transaksi dengan nominal valid (> 0).');
+      return;
+    }
+
+    setSimpananList(prev => [...newTransactions, ...prev]);
+    setBulkSuccessMsg(`Berhasil menambahkan ${newTransactions.length} simpanan secara massal!`);
+    setTimeout(() => {
+      setIsBulkModalOpen(false);
+      setBulkSuccessMsg('');
+    }, 1200);
+  };
+
+  // Handle CSV file upload
+  const handleCsvFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCsvFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        const parsed = parseSavingsCsv(text, anggotaList);
+        setCsvParsedRows(parsed);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Submit CSV Bulk Transaction
+  const handleProcessCsvImport = () => {
+    const validRows = csvParsedRows.filter(r => r.isValid);
+    if (validRows.length === 0) {
+      alert('Tidak ada baris data CSV yang valid untuk diimport.');
+      return;
+    }
+
+    const now = Date.now();
+    const newTransactions: Simpanan[] = validRows.map((r, index) => ({
+      id: `s_csv_${now}_${index}_${Math.random().toString(36).substring(2, 6)}`,
+      memberId: r.memberId,
+      jenis: r.jenis,
+      periode: r.periode,
+      jumlah: r.jumlah,
+      tanggal: r.tanggal,
+      catatan: r.catatan || `Import Simpanan ${r.jenis} (${r.periode})`
+    }));
+
+    setSimpananList(prev => [...newTransactions, ...prev]);
+    setBulkSuccessMsg(`Berhasil mengimpor ${newTransactions.length} transaksi simpanan dari CSV!`);
+    setTimeout(() => {
+      setIsBulkModalOpen(false);
+      setBulkSuccessMsg('');
+    }, 1200);
+  };
 
   // Edit & Delete Confirmation States
   const [isEditing, setIsEditing] = useState(false);
@@ -425,6 +587,16 @@ export default function ManageSavings({
               </button>
             </div>
             <div className="flex items-center gap-2">
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={handleOpenBulkModal}
+                  className="bg-gold-accent hover:bg-gold-accent/90 text-white font-brand text-xs uppercase tracking-wider font-semibold py-1 px-2.5 rounded shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FileSpreadsheet className="h-3.5 w-3.5" />
+                  Input Massal
+                </button>
+              )}
               {isEditing && (
                 <button
                   type="button"
@@ -933,6 +1105,377 @@ export default function ManageSavings({
                 Hapus Transaksi
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Input Modal */}
+      {isBulkModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-cream-card border-2 border-beige-border rounded-xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            
+            {/* Modal Header */}
+            <div className="bg-cream-bg p-4 border-b border-beige-border flex justify-between items-center shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-primary text-white rounded-lg shadow-xs">
+                  <FileSpreadsheet className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold font-display text-green-primary uppercase tracking-wider">
+                    Input Massal (Bulk Input) Simpanan Anggota
+                  </h3>
+                  <p className="text-xs text-slate-500 font-sans">
+                    Catat setoran simpanan untuk seluruh atau banyak anggota sekaligus secara efisien.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsBulkModalOpen(false)}
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200 transition-all cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Tabs */}
+            <div className="flex border-b border-beige-border bg-cream-card shrink-0 px-4 pt-3 gap-2">
+              <button
+                type="button"
+                onClick={() => setBulkActiveTab('grid')}
+                className={`px-4 py-2 text-xs font-brand uppercase tracking-wider font-bold rounded-t-lg transition-all cursor-pointer border-b-2 ${
+                  bulkActiveTab === 'grid'
+                    ? 'border-green-primary text-green-primary bg-white shadow-xs'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                📋 Form Grid Massal (Rekomendasi)
+              </button>
+              <button
+                type="button"
+                onClick={() => setBulkActiveTab('csv')}
+                className={`px-4 py-2 text-xs font-brand uppercase tracking-wider font-bold rounded-t-lg transition-all cursor-pointer border-b-2 ${
+                  bulkActiveTab === 'csv'
+                    ? 'border-green-primary text-green-primary bg-white shadow-xs'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                📥 Upload & Import CSV
+              </button>
+            </div>
+
+            {/* Success notification */}
+            {bulkSuccessMsg && (
+              <div className="bg-green-100 border-b border-green-300 text-green-800 px-4 py-2.5 text-xs font-medium flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-600 shrink-0" />
+                {bulkSuccessMsg}
+              </div>
+            )}
+
+            {/* Modal Content Body */}
+            <div className="p-5 overflow-y-auto flex-1 space-y-4">
+              
+              {bulkActiveTab === 'grid' ? (
+                <>
+                  {/* Global settings bar */}
+                  <div className="bg-white border border-beige-border rounded-lg p-3.5 space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-brand uppercase tracking-wider font-semibold text-green-primary mb-1">
+                          Jenis Simpanan:
+                        </label>
+                        <select
+                          value={bulkJenis}
+                          onChange={(e) => setBulkJenis(e.target.value as JenisSimpanan)}
+                          className="w-full bg-cream-bg border border-beige-border rounded px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:ring-1 focus:ring-green-primary focus:outline-none"
+                        >
+                          <option value="wajib">Simpanan Wajib</option>
+                          <option value="pokok">Simpanan Pokok</option>
+                          <option value="sukarela">Simpanan Sukarela</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-brand uppercase tracking-wider font-semibold text-green-primary mb-1">
+                          Periode / Bulan:
+                        </label>
+                        <input
+                          type="month"
+                          value={bulkPeriode}
+                          onChange={(e) => setBulkPeriode(e.target.value)}
+                          className="w-full bg-cream-bg border border-beige-border rounded px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-green-primary focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-brand uppercase tracking-wider font-semibold text-green-primary mb-1">
+                          Tanggal Transaksi:
+                        </label>
+                        <input
+                          type="date"
+                          value={bulkTanggal}
+                          onChange={(e) => setBulkTanggal(e.target.value)}
+                          className="w-full bg-cream-bg border border-beige-border rounded px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-green-primary focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-brand uppercase tracking-wider font-semibold text-green-primary mb-1">
+                          Nominal Default (Rp):
+                        </label>
+                        <div className="flex gap-1.5">
+                          <input
+                            type="number"
+                            value={bulkDefaultAmount}
+                            onChange={(e) => setBulkDefaultAmount(e.target.value)}
+                            placeholder="50000"
+                            className="w-full bg-cream-bg border border-beige-border rounded px-2.5 py-1.5 text-xs font-mono focus:ring-1 focus:ring-green-primary focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleApplyDefaultAmount}
+                            className="bg-green-primary hover:bg-green-primary/90 text-white text-[11px] font-brand uppercase tracking-wider font-semibold px-2 py-1.5 rounded transition-all shrink-0 cursor-pointer"
+                          >
+                            Terapkan
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-xs">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSelectAll(true)}
+                          className="text-green-primary hover:underline text-[11px] font-medium cursor-pointer"
+                        >
+                          Centang Semua
+                        </button>
+                        <span className="text-slate-300">|</span>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSelectAll(false)}
+                          className="text-slate-500 hover:underline text-[11px] font-medium cursor-pointer"
+                        >
+                          Batal Centang
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        {Object.values(bulkGridRows).filter(r => r.selected).length} dari {anggotaList.length} Anggota Dipilih
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Grid Table */}
+                  <div className="border border-beige-border rounded-lg max-h-[320px] overflow-y-auto bg-white">
+                    <table className="min-w-full divide-y divide-beige-border text-xs">
+                      <thead className="bg-cream-bg text-gold-accent sticky top-0 z-10 text-[10px] font-sans uppercase">
+                        <tr>
+                          <th className="p-2 text-center w-10 border-b border-r border-beige-border">Pilih</th>
+                          <th className="p-2 text-left font-bold border-b border-r border-beige-border">Nama Anggota</th>
+                          <th className="p-2 text-left font-bold border-b border-r border-beige-border w-24">Jabatan</th>
+                          <th className="p-2 text-left font-bold border-b border-r border-beige-border w-44">Jumlah Simpanan (Rp)</th>
+                          <th className="p-2 text-left font-bold border-b border-beige-border">Catatan Transaksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-beige-border text-xs">
+                        {(anggotaList || []).map((member) => {
+                          const row = bulkGridRows[member.id] || { selected: true, amount: bulkDefaultAmount || '50000', note: '' };
+                          const isSel = Boolean(row?.selected);
+                          const numAmt = parseInt(String(row?.amount || '0').replace(/[^0-9]/g, ''), 10) || 0;
+
+                          return (
+                            <tr key={member.id} className={`hover:bg-cream-bg transition-colors ${isSel ? 'bg-white' : 'bg-slate-50/70 opacity-60'}`}>
+                              <td className="p-2 text-center border-r border-beige-border">
+                                <input
+                                  type="checkbox"
+                                  checked={isSel}
+                                  onChange={(e) => {
+                                    setBulkGridRows(prev => ({
+                                      ...prev,
+                                      [member.id]: { ...row, selected: e.target.checked }
+                                    }));
+                                  }}
+                                  className="h-4 w-4 text-green-primary border-beige-border rounded focus:ring-green-primary cursor-pointer"
+                                />
+                              </td>
+                              <td className="p-2 font-serif italic text-slate-800 font-semibold border-r border-beige-border">
+                                {member.nama}
+                              </td>
+                              <td className="p-2 border-r border-beige-border text-[11px] text-slate-500">
+                                {member.jabatan}
+                              </td>
+                              <td className="p-2 border-r border-beige-border">
+                                <input
+                                  type="number"
+                                  value={row.amount}
+                                  disabled={!isSel}
+                                  onChange={(e) => {
+                                    setBulkGridRows(prev => ({
+                                      ...prev,
+                                      [member.id]: { ...row, amount: e.target.value }
+                                    }));
+                                  }}
+                                  className="w-full bg-white border border-beige-border rounded px-2 py-1 text-xs font-mono focus:ring-1 focus:ring-green-primary focus:outline-none disabled:bg-slate-100"
+                                />
+                                {numAmt > 0 && isSel && (
+                                  <span className="text-[10px] text-green-primary font-mono block mt-0.5">
+                                    {formatRupiah(numAmt)}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="p-2">
+                                <input
+                                  type="text"
+                                  value={row.note}
+                                  disabled={!isSel}
+                                  onChange={(e) => {
+                                    setBulkGridRows(prev => ({
+                                      ...prev,
+                                      [member.id]: { ...row, note: e.target.value }
+                                    }));
+                                  }}
+                                  placeholder={`Setoran ${bulkJenis} (${bulkPeriode})`}
+                                  className="w-full bg-white border border-beige-border rounded px-2 py-1 text-xs focus:ring-1 focus:ring-green-primary focus:outline-none disabled:bg-slate-100"
+                                />
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* CSV Mode */}
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white border border-beige-border rounded-lg p-4 gap-3">
+                      <div>
+                        <h4 className="text-xs font-bold font-brand text-green-primary uppercase tracking-wider mb-1">
+                          1. Unduh Template CSV Anggota
+                        </h4>
+                        <p className="text-xs text-slate-500 font-sans">
+                          File CSV akan otomatis terisi daftar nama dan ID seluruh {anggotaList.length} anggota terdaftar.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const csvText = generateSavingsCsvTemplate(anggotaList, bulkJenis, bulkPeriode, bulkTanggal);
+                          downloadCsv(`Template_Simpanan_${bulkJenis}_${bulkPeriode}.csv`, csvText);
+                        }}
+                        className="bg-green-primary hover:bg-green-primary/90 text-white text-xs font-brand uppercase tracking-wider font-semibold px-3 py-2 rounded-lg shadow-xs transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
+                      >
+                        <Download className="h-4 w-4" />
+                        Unduh Template CSV
+                      </button>
+                    </div>
+
+                    <div className="bg-white border border-beige-border rounded-lg p-4">
+                      <h4 className="text-xs font-bold font-brand text-green-primary uppercase tracking-wider mb-2">
+                        2. Unggah File CSV yang Telah Diisi
+                      </h4>
+                      <input
+                        type="file"
+                        accept=".csv"
+                        onChange={handleCsvFileUpload}
+                        className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-green-primary/10 file:text-green-primary hover:file:bg-green-primary/20 cursor-pointer"
+                      />
+                      {csvFileName && (
+                        <p className="text-xs text-slate-600 mt-2 font-mono">
+                          📁 File terpilih: <span className="font-semibold">{csvFileName}</span> ({csvParsedRows.length} baris data)
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Preview Table */}
+                    {csvParsedRows.length > 0 && (
+                      <div className="border border-beige-border rounded-lg max-h-[260px] overflow-y-auto bg-white">
+                        <table className="min-w-full divide-y divide-beige-border text-xs">
+                          <thead className="bg-cream-bg text-gold-accent sticky top-0 z-10 text-[10px] font-sans uppercase">
+                            <tr>
+                              <th className="p-2 text-center w-16">Status</th>
+                              <th className="p-2 text-left">Nama Anggota</th>
+                              <th className="p-2 text-left">Jenis</th>
+                              <th className="p-2 text-left">Periode</th>
+                              <th className="p-2 text-right">Jumlah (Rp)</th>
+                              <th className="p-2 text-left">Tanggal</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-beige-border text-xs">
+                            {csvParsedRows.map((r, idx) => (
+                              <tr key={idx} className={r.isValid ? 'hover:bg-cream-bg' : 'bg-red-50'}>
+                                <td className="p-2 text-center">
+                                  {r.isValid ? (
+                                    <span className="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded">Valid</span>
+                                  ) : (
+                                    <span className="px-1.5 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded" title={r.errorMsg}>Error</span>
+                                  )}
+                                </td>
+                                <td className="p-2 font-serif italic">{r.namaMember}</td>
+                                <td className="p-2 uppercase text-[10px] font-bold text-slate-600">{r.jenis}</td>
+                                <td className="p-2 font-mono text-[11px]">{r.periode}</td>
+                                <td className="p-2 text-right font-mono font-semibold text-green-primary">{formatRupiah(r.jumlah)}</td>
+                                <td className="p-2 font-mono text-[11px]">{r.tanggal}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-cream-bg p-4 border-t border-beige-border flex justify-between items-center shrink-0">
+              <div className="text-xs font-mono text-slate-700">
+                {bulkActiveTab === 'grid' ? (
+                  <span>
+                    Total Diproses: <strong className="text-green-primary">{Object.values(bulkGridRows).filter(r => r && r.selected && (parseInt(String(r.amount || '0').replace(/[^0-9]/g, ''), 10) > 0)).length} Transaksi</strong> 
+                    ({formatRupiah(Object.values(bulkGridRows).filter(r => r && r.selected).reduce((sum, r) => sum + (parseInt(String(r?.amount || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))})
+                  </span>
+                ) : (
+                  <span>
+                    Baris Valid CSV: <strong className="text-green-primary">{csvParsedRows.filter(r => r.isValid).length} Transaksi</strong>
+                  </span>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsBulkModalOpen(false)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-beige-border text-slate-700 font-brand text-xs uppercase tracking-wider font-semibold rounded-lg transition-all cursor-pointer"
+                >
+                  Batal
+                </button>
+
+                {bulkActiveTab === 'grid' ? (
+                  <button
+                    type="button"
+                    onClick={handleProcessBulkGrid}
+                    className="px-4 py-2 bg-green-primary hover:bg-green-primary/90 text-white font-brand text-xs uppercase tracking-wider font-semibold rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                    Proses Input Massal
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={csvParsedRows.filter(r => r.isValid).length === 0}
+                    onClick={handleProcessCsvImport}
+                    className="px-4 py-2 bg-green-primary hover:bg-green-primary/90 disabled:bg-slate-300 text-white font-brand text-xs uppercase tracking-wider font-semibold rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                    Eksekusi Import CSV
+                  </button>
+                )}
+              </div>
+            </div>
+
           </div>
         </div>
       )}

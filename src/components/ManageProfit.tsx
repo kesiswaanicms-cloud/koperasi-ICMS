@@ -16,12 +16,22 @@ import {
   Filter,
   Search,
   Edit2,
-  X
+  X,
+  Download,
+  Upload,
+  CheckCircle,
+  Check
 } from 'lucide-react';
 import { LabaUsaha, KategoriAktivitas, Anggota } from '../types';
 import { formatRupiah, getBusinessProfitSummary } from '../utils/format';
+import { 
+  downloadCsv, 
+  generateInstallmentsCsvTemplate, 
+  parseInstallmentsCsv, 
+  ParsedInstallmentRow 
+} from '../utils/csvHelpers';
 
-export const KATEGORI_INFO: Record<string, { nama: string; tipe: 'penerimaan' | 'pengeluaran' | 'both'; siklus: string; warna: string }> = {
+const KATEGORI_INFO: Record<string, { nama: string; tipe: 'penerimaan' | 'pengeluaran' | 'both'; siklus: string; warna: string }> = {
   ksp_pinjaman: { nama: 'Pemberian Pinjaman', tipe: 'pengeluaran', siklus: 'Simpan Pinjam', warna: 'bg-amber-600/10 text-amber-800 border-amber-200' },
   ksp_angsuran: { nama: 'Angsuran Pokok', tipe: 'penerimaan', siklus: 'Simpan Pinjam', warna: 'bg-green-primary/10 text-green-primary border-green-primary/20' },
   ksp_bunga: { nama: 'Penerimaan Bunga', tipe: 'penerimaan', siklus: 'Simpan Pinjam', warna: 'bg-green-primary/10 text-green-primary border-green-primary/20' },
@@ -64,6 +74,168 @@ export default function ManageProfit({
 
   // Validation state
   const [errorMsg, setErrorMsg] = useState('');
+
+  // Bulk Input Modal State (Cicilan)
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [bulkActiveTab, setBulkActiveTab] = useState<'grid' | 'csv'>('grid');
+  const [bulkTanggal, setBulkTanggal] = useState(() => new Date().toISOString().split('T')[0]);
+  const [bulkGridRows, setBulkGridRows] = useState<Record<string, { selected: boolean; pokok: string; bunga: string; note: string }>>({});
+  
+  // CSV Import state
+  const [csvParsedRows, setCsvParsedRows] = useState<ParsedInstallmentRow[]>([]);
+  const [csvFileName, setCsvFileName] = useState('');
+  const [bulkSuccessMsg, setBulkSuccessMsg] = useState('');
+
+  // Open Bulk Modal
+  const handleOpenBulkModal = () => {
+    setIsBulkModalOpen(true);
+    setBulkSuccessMsg('');
+    const initialRows: Record<string, { selected: boolean; pokok: string; bunga: string; note: string }> = {};
+    anggotaList.forEach(member => {
+      initialRows[member.id] = {
+        selected: false,
+        pokok: '0',
+        bunga: '0',
+        note: `Cicilan Pinjaman - ${member.nama}`
+      };
+    });
+    setBulkGridRows(initialRows);
+    setCsvParsedRows([]);
+    setCsvFileName('');
+  };
+
+  // Toggle select all
+  const handleToggleSelectAll = (select: boolean) => {
+    setBulkGridRows(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(id => {
+        next[id] = { ...next[id], selected: select };
+      });
+      return next;
+    });
+  };
+
+  // Submit Grid Bulk Transaction for Cicilan
+  const handleProcessBulkGrid = () => {
+    const selectedEntries = Object.entries(bulkGridRows).filter(([_, data]) => data.selected);
+    if (selectedEntries.length === 0) {
+      alert('Pilih setidaknya 1 anggota untuk diproses.');
+      return;
+    }
+
+    const newTransactions: LabaUsaha[] = [];
+    const now = Date.now();
+    let index = 0;
+
+    for (const [memberId, data] of selectedEntries) {
+      const pokok = parseInt(data.pokok.replace(/[^0-9]/g, ''), 10) || 0;
+      const bunga = parseInt(data.bunga.replace(/[^0-9]/g, ''), 10) || 0;
+      
+      if (pokok <= 0 && bunga <= 0) continue;
+
+      const memberName = anggotaList.find(m => m.id === memberId)?.nama || 'Anggota';
+      const catatanBase = data.note.trim() || `Cicilan Pinjaman - ${memberName}`;
+
+      if (pokok > 0) {
+        newTransactions.push({
+          id: `lu_bulk_${now}_p_${index++}_${Math.random().toString(36).substring(2, 6)}`,
+          namaUsaha: memberName,
+          pengeluaran: 0,
+          penerimaan: pokok,
+          tanggal: bulkTanggal,
+          catatan: `${catatanBase} (Angsuran Pokok)`,
+          kategori: 'ksp_angsuran'
+        });
+      }
+
+      if (bunga > 0) {
+        newTransactions.push({
+          id: `lu_bulk_${now}_b_${index++}_${Math.random().toString(36).substring(2, 6)}`,
+          namaUsaha: memberName,
+          pengeluaran: 0,
+          penerimaan: bunga,
+          tanggal: bulkTanggal,
+          catatan: `${catatanBase} (Penerimaan Bunga)`,
+          kategori: 'ksp_bunga'
+        });
+      }
+    }
+
+    if (newTransactions.length === 0) {
+      alert('Tidak ada entri cicilan dengan nilai pokok atau bunga valid (> 0).');
+      return;
+    }
+
+    setLabaUsahaList(prev => [...newTransactions, ...prev]);
+    setBulkSuccessMsg(`Berhasil mencatat ${newTransactions.length} entri cicilan secara massal!`);
+    setTimeout(() => {
+      setIsBulkModalOpen(false);
+      setBulkSuccessMsg('');
+    }, 1200);
+  };
+
+  // CSV Upload handler
+  const handleCsvFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCsvFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        const parsed = parseInstallmentsCsv(text, anggotaList);
+        setCsvParsedRows(parsed);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Process CSV Import Submit for Cicilan
+  const handleProcessCsvImport = () => {
+    const validRows = csvParsedRows.filter(r => r.isValid);
+    if (validRows.length === 0) {
+      alert('Tidak ada baris data CSV yang valid untuk diimport.');
+      return;
+    }
+
+    const newTransactions: LabaUsaha[] = [];
+    const now = Date.now();
+    let index = 0;
+
+    validRows.forEach((r) => {
+      const catatanBase = r.catatan || `Cicilan Pinjaman - ${r.namaMember}`;
+      if (r.pokok > 0) {
+        newTransactions.push({
+          id: `lu_csv_${now}_p_${index++}_${Math.random().toString(36).substring(2, 6)}`,
+          namaUsaha: r.namaMember,
+          pengeluaran: 0,
+          penerimaan: r.pokok,
+          tanggal: r.tanggal,
+          catatan: `${catatanBase} (Angsuran Pokok)`,
+          kategori: 'ksp_angsuran'
+        });
+      }
+      if (r.bunga > 0) {
+        newTransactions.push({
+          id: `lu_csv_${now}_b_${index++}_${Math.random().toString(36).substring(2, 6)}`,
+          namaUsaha: r.namaMember,
+          pengeluaran: 0,
+          penerimaan: r.bunga,
+          tanggal: r.tanggal,
+          catatan: `${catatanBase} (Penerimaan Bunga)`,
+          kategori: 'ksp_bunga'
+        });
+      }
+    });
+
+    setLabaUsahaList(prev => [...newTransactions, ...prev]);
+    setBulkSuccessMsg(`Berhasil mengimpor ${newTransactions.length} entri cicilan dari CSV!`);
+    setTimeout(() => {
+      setIsBulkModalOpen(false);
+      setBulkSuccessMsg('');
+    }, 1200);
+  };
 
   // Deletion confirmation state
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -253,15 +425,27 @@ export default function ManageProfit({
               {isEditing ? <Edit2 className="h-5 w-5 text-green-primary" /> : <PlusCircle className="h-5 w-5 text-green-primary" />}
               {isEditing ? 'Ubah Kegiatan Usaha' : 'Catat Kegiatan Usaha Koperasi'}
             </div>
-            {isEditing && (
-              <button
-                type="button"
-                onClick={handleCancelEdit}
-                className="text-xs text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 normal-case tracking-normal font-sans font-medium cursor-pointer"
-              >
-                <X className="h-3 w-3" /> Batal
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={handleOpenBulkModal}
+                  className="bg-gold-accent hover:bg-gold-accent/90 text-white font-brand text-xs uppercase tracking-wider font-semibold py-1 px-2.5 rounded shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FileSpreadsheet className="h-3.5 w-3.5" />
+                  Input Massal Cicilan
+                </button>
+              )}
+              {isEditing && (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="text-xs text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 normal-case tracking-normal font-sans font-medium cursor-pointer"
+                >
+                  <X className="h-3 w-3" /> Batal
+                </button>
+              )}
+            </div>
           </h3>
 
           {isAdmin ? (
@@ -753,6 +937,348 @@ export default function ManageProfit({
                 Hapus Catatan
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Input Modal for Cicilan */}
+      {isBulkModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-cream-card border-2 border-beige-border rounded-xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            
+            {/* Modal Header */}
+            <div className="bg-cream-bg p-4 border-b border-beige-border flex justify-between items-center shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-primary text-white rounded-lg shadow-xs">
+                  <FileSpreadsheet className="h-6 w-6 text-gold-accent" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold font-display text-green-primary uppercase tracking-wider">
+                    Input Massal Cicilan & Bunga Pinjaman
+                  </h3>
+                  <p className="text-xs text-slate-500 font-sans">
+                    Catat penerimaan Angsuran Pokok dan Penerimaan Bunga pinjaman untuk banyak anggota sekaligus.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsBulkModalOpen(false)}
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200 transition-all cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Tabs */}
+            <div className="flex border-b border-beige-border bg-cream-card shrink-0 px-4 pt-3 gap-2">
+              <button
+                type="button"
+                onClick={() => setBulkActiveTab('grid')}
+                className={`px-4 py-2 text-xs font-brand uppercase tracking-wider font-bold rounded-t-lg transition-all cursor-pointer border-b-2 ${
+                  bulkActiveTab === 'grid'
+                    ? 'border-green-primary text-green-primary bg-white shadow-xs'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                📋 Form Grid Massal Cicilan (Rekomendasi)
+              </button>
+              <button
+                type="button"
+                onClick={() => setBulkActiveTab('csv')}
+                className={`px-4 py-2 text-xs font-brand uppercase tracking-wider font-bold rounded-t-lg transition-all cursor-pointer border-b-2 ${
+                  bulkActiveTab === 'csv'
+                    ? 'border-green-primary text-green-primary bg-white shadow-xs'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                📥 Upload & Import CSV Cicilan
+              </button>
+            </div>
+
+            {/* Success notification */}
+            {bulkSuccessMsg && (
+              <div className="bg-green-100 border-b border-green-300 text-green-800 px-4 py-2.5 text-xs font-medium flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-600 shrink-0" />
+                {bulkSuccessMsg}
+              </div>
+            )}
+
+            {/* Modal Content Body */}
+            <div className="p-5 overflow-y-auto flex-1 space-y-4">
+              
+              {bulkActiveTab === 'grid' ? (
+                <>
+                  {/* Settings & Explanatory Tip */}
+                  <div className="bg-white border border-beige-border rounded-lg p-3.5 space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-brand uppercase tracking-wider font-semibold text-green-primary mb-1">
+                          Tanggal Pelunasan / Transaksi:
+                        </label>
+                        <input
+                          type="date"
+                          value={bulkTanggal}
+                          onChange={(e) => setBulkTanggal(e.target.value)}
+                          className="w-full bg-cream-bg border border-beige-border rounded px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-green-primary focus:outline-none"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-2 flex items-center bg-green-50 border border-green-200 rounded p-2 text-[11px] text-green-900 leading-tight">
+                        💡 <span className="font-semibold ml-1 mr-1">Panduan Pengisian:</span> Isi nominal pada kolom <strong>Angsuran Pokok</strong> dan <strong>Penerimaan Bunga</strong> per anggota. Pembayaran akan otomatis terakumulasi dalam pendapatan & arus kas simpan pinjam koperasi.
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-1 border-t border-slate-100 text-xs">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSelectAll(true)}
+                          className="text-green-primary hover:underline text-[11px] font-medium cursor-pointer"
+                        >
+                          Centang Semua
+                        </button>
+                        <span className="text-slate-300">|</span>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSelectAll(false)}
+                          className="text-slate-500 hover:underline text-[11px] font-medium cursor-pointer"
+                        >
+                          Batal Centang
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        {Object.values(bulkGridRows).filter(r => r.selected).length} dari {anggotaList.length} Anggota Dipilih
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Grid Table */}
+                  <div className="border border-beige-border rounded-lg max-h-[320px] overflow-y-auto bg-white">
+                    <table className="min-w-full divide-y divide-beige-border text-xs">
+                      <thead className="bg-cream-bg text-gold-accent sticky top-0 z-10 text-[10px] font-sans uppercase">
+                        <tr>
+                          <th className="p-2 text-center w-10 border-b border-r border-beige-border">Pilih</th>
+                          <th className="p-2 text-left font-bold border-b border-r border-beige-border">Nama Anggota</th>
+                          <th className="p-2 text-left font-bold border-b border-r border-beige-border w-36">Angsuran Pokok (Rp)</th>
+                          <th className="p-2 text-left font-bold border-b border-r border-beige-border w-36">Penerimaan Bunga (Rp)</th>
+                          <th className="p-2 text-left font-bold border-b border-beige-border">Catatan / Keterangan</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-beige-border text-xs">
+                        {(anggotaList || []).map((member) => {
+                          const row = bulkGridRows[member.id] || { selected: false, pokok: '0', bunga: '0', note: '' };
+                          const isSel = Boolean(row?.selected);
+                          const numPokok = parseInt(String(row?.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0;
+                          const numBunga = parseInt(String(row?.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0;
+
+                          return (
+                            <tr key={member.id} className={`hover:bg-cream-bg transition-colors ${isSel ? 'bg-white' : 'bg-slate-50/70 opacity-60'}`}>
+                              <td className="p-2 text-center border-r border-beige-border">
+                                <input
+                                  type="checkbox"
+                                  checked={isSel}
+                                  onChange={(e) => {
+                                    setBulkGridRows(prev => ({
+                                      ...prev,
+                                      [member.id]: { ...row, selected: e.target.checked }
+                                    }));
+                                  }}
+                                  className="h-4 w-4 text-green-primary border-beige-border rounded focus:ring-green-primary cursor-pointer"
+                                />
+                              </td>
+                              <td className="p-2 font-serif italic text-slate-800 font-semibold border-r border-beige-border">
+                                {member.nama}
+                              </td>
+                              <td className="p-2 border-r border-beige-border">
+                                <input
+                                  type="number"
+                                  value={row.pokok}
+                                  disabled={!isSel}
+                                  onChange={(e) => {
+                                    setBulkGridRows(prev => ({
+                                      ...prev,
+                                      [member.id]: { ...row, pokok: e.target.value }
+                                    }));
+                                  }}
+                                  className="w-full bg-white border border-beige-border rounded px-2 py-1 text-xs font-mono focus:ring-1 focus:ring-green-primary focus:outline-none disabled:bg-slate-100"
+                                />
+                                {numPokok > 0 && isSel && (
+                                  <span className="text-[10px] text-green-primary font-mono block mt-0.5">
+                                    {formatRupiah(numPokok)}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="p-2 border-r border-beige-border">
+                                <input
+                                  type="number"
+                                  value={row.bunga}
+                                  disabled={!isSel}
+                                  onChange={(e) => {
+                                    setBulkGridRows(prev => ({
+                                      ...prev,
+                                      [member.id]: { ...row, bunga: e.target.value }
+                                    }));
+                                  }}
+                                  className="w-full bg-white border border-beige-border rounded px-2 py-1 text-xs font-mono focus:ring-1 focus:ring-green-primary focus:outline-none disabled:bg-slate-100"
+                                />
+                                {numBunga > 0 && isSel && (
+                                  <span className="text-[10px] text-amber-700 font-mono block mt-0.5">
+                                    {formatRupiah(numBunga)}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="p-2">
+                                <input
+                                  type="text"
+                                  value={row.note}
+                                  disabled={!isSel}
+                                  onChange={(e) => {
+                                    setBulkGridRows(prev => ({
+                                      ...prev,
+                                      [member.id]: { ...row, note: e.target.value }
+                                    }));
+                                  }}
+                                  placeholder={`Cicilan Pinjaman - ${member.nama}`}
+                                  className="w-full bg-white border border-beige-border rounded px-2 py-1 text-xs focus:ring-1 focus:ring-green-primary focus:outline-none disabled:bg-slate-100"
+                                />
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* CSV Mode for Cicilan */}
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white border border-beige-border rounded-lg p-4 gap-3">
+                      <div>
+                        <h4 className="text-xs font-bold font-brand text-green-primary uppercase tracking-wider mb-1">
+                          1. Unduh Template CSV Cicilan Anggota
+                        </h4>
+                        <p className="text-xs text-slate-500 font-sans">
+                          File CSV akan terisi otomatis daftar nama seluruh {anggotaList.length} anggota terdaftar dengan kolom Angsuran Pokok & Bunga.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const csvText = generateInstallmentsCsvTemplate(anggotaList, bulkTanggal);
+                          downloadCsv(`Template_Cicilan_Pinjaman.csv`, csvText);
+                        }}
+                        className="bg-green-primary hover:bg-green-primary/90 text-white text-xs font-brand uppercase tracking-wider font-semibold px-3 py-2 rounded-lg shadow-xs transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
+                      >
+                        <Download className="h-4 w-4" />
+                        Unduh Template CSV
+                      </button>
+                    </div>
+
+                    <div className="bg-white border border-beige-border rounded-lg p-4">
+                      <h4 className="text-xs font-bold font-brand text-green-primary uppercase tracking-wider mb-2">
+                        2. Unggah File CSV Cicilan
+                      </h4>
+                      <input
+                        type="file"
+                        accept=".csv"
+                        onChange={handleCsvFileUpload}
+                        className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-green-primary/10 file:text-green-primary hover:file:bg-green-primary/20 cursor-pointer"
+                      />
+                      {csvFileName && (
+                        <p className="text-xs text-slate-600 mt-2 font-mono">
+                          📁 File terpilih: <span className="font-semibold">{csvFileName}</span> ({csvParsedRows.length} baris data)
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Preview Table */}
+                    {csvParsedRows.length > 0 && (
+                      <div className="border border-beige-border rounded-lg max-h-[260px] overflow-y-auto bg-white">
+                        <table className="min-w-full divide-y divide-beige-border text-xs">
+                          <thead className="bg-cream-bg text-gold-accent sticky top-0 z-10 text-[10px] font-sans uppercase">
+                            <tr>
+                              <th className="p-2 text-center w-16">Status</th>
+                              <th className="p-2 text-left">Nama Anggota</th>
+                              <th className="p-2 text-right">Angsuran Pokok (Rp)</th>
+                              <th className="p-2 text-right">Penerimaan Bunga (Rp)</th>
+                              <th className="p-2 text-left">Tanggal</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-beige-border text-xs font-mono">
+                            {csvParsedRows.map((r, idx) => (
+                              <tr key={idx} className={r.isValid ? 'hover:bg-cream-bg' : 'bg-red-50'}>
+                                <td className="p-2 text-center font-sans">
+                                  {r.isValid ? (
+                                    <span className="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded">Valid</span>
+                                  ) : (
+                                    <span className="px-1.5 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded" title={r.errorMsg}>Error</span>
+                                  )}
+                                </td>
+                                <td className="p-2 font-serif italic font-sans">{r.namaMember}</td>
+                                <td className="p-2 text-right font-semibold text-green-primary">{formatRupiah(r.pokok)}</td>
+                                <td className="p-2 text-right font-semibold text-amber-700">{formatRupiah(r.bunga)}</td>
+                                <td className="p-2 text-[11px]">{r.tanggal}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-cream-bg p-4 border-t border-beige-border flex justify-between items-center shrink-0">
+              <div className="text-xs font-mono text-slate-700">
+                {bulkActiveTab === 'grid' ? (
+                  <span>
+                    Total Diproses: <strong className="text-green-primary">{Object.values(bulkGridRows).filter(r => r && r.selected && ((parseInt(String(r.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0) > 0 || (parseInt(String(r.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0) > 0)).length} Anggota</strong> 
+                    (Pokok: {formatRupiah(Object.values(bulkGridRows).filter(r => r && r.selected).reduce((sum, r) => sum + (parseInt(String(r?.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))}, 
+                    Bunga: {formatRupiah(Object.values(bulkGridRows).filter(r => r.selected).reduce((sum, r) => sum + (parseInt(String(r?.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))})
+                  </span>
+                ) : (
+                  <span>
+                    Baris Valid CSV: <strong className="text-green-primary">{csvParsedRows.filter(r => r.isValid).length} Baris</strong>
+                  </span>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsBulkModalOpen(false)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-beige-border text-slate-700 font-brand text-xs uppercase tracking-wider font-semibold rounded-lg transition-all cursor-pointer"
+                >
+                  Batal
+                </button>
+
+                {bulkActiveTab === 'grid' ? (
+                  <button
+                    type="button"
+                    onClick={handleProcessBulkGrid}
+                    className="px-4 py-2 bg-green-primary hover:bg-green-primary/90 text-white font-brand text-xs uppercase tracking-wider font-semibold rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                    Proses Input Massal Cicilan
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={csvParsedRows.filter(r => r.isValid).length === 0}
+                    onClick={handleProcessCsvImport}
+                    className="px-4 py-2 bg-green-primary hover:bg-green-primary/90 disabled:bg-slate-300 text-white font-brand text-xs uppercase tracking-wider font-semibold rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                    Eksekusi Import CSV
+                  </button>
+                )}
+              </div>
+            </div>
+
           </div>
         </div>
       )}
