@@ -368,7 +368,7 @@ export default function App() {
       alert('Berhasil terhubung ke Master Server! Sistem akan me-refresh database.');
     }
     setTimeout(() => {
-      fetchState();
+      window.location.reload();
     }, 150);
   };
 

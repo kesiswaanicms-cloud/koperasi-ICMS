@@ -139,7 +139,7 @@ export default function ManageSavings({
 
   // Submit Grid Bulk Transaction
   const handleProcessBulkGrid = () => {
-    const selectedEntries = Object.entries(bulkGridRows).filter(([_, data]) => data && data.selected);
+    const selectedEntries = Object.entries(bulkGridRows).filter(([_, data]: [string, any]) => data && data.selected) as [string, any][];
     if (selectedEntries.length === 0) {
       alert('Pilih setidaknya 1 anggota untuk diproses.');
       return;
@@ -1261,7 +1261,7 @@ export default function ManageSavings({
                         </button>
                       </div>
                       <p className="text-[11px] text-slate-500">
-                        {Object.values(bulkGridRows).filter(r => r.selected).length} dari {anggotaList.length} Anggota Dipilih
+                        {Object.values(bulkGridRows).filter((r: any) => r && r.selected).length} dari {anggotaList.length} Anggota Dipilih
                       </p>
                     </div>
                   </div>
@@ -1434,8 +1434,8 @@ export default function ManageSavings({
               <div className="text-xs font-mono text-slate-700">
                 {bulkActiveTab === 'grid' ? (
                   <span>
-                    Total Diproses: <strong className="text-green-primary">{Object.values(bulkGridRows).filter(r => r && r.selected && (parseInt(String(r.amount || '0').replace(/[^0-9]/g, ''), 10) > 0)).length} Transaksi</strong> 
-                    ({formatRupiah(Object.values(bulkGridRows).filter(r => r && r.selected).reduce((sum, r) => sum + (parseInt(String(r?.amount || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))})
+                    Total Diproses: <strong className="text-green-primary">{Object.values(bulkGridRows).filter((r: any) => r && r.selected && (parseInt(String(r.amount || '0').replace(/[^0-9]/g, ''), 10) > 0)).length} Transaksi</strong> 
+                    ({formatRupiah((Object.values(bulkGridRows) as any[]).filter((r: any) => r && r.selected).reduce((sum: number, r: any) => sum + (parseInt(String(r?.amount || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))})
                   </span>
                 ) : (
                   <span>

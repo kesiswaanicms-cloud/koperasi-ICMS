@@ -117,7 +117,7 @@ export default function ManageProfit({
 
   // Submit Grid Bulk Transaction for Cicilan
   const handleProcessBulkGrid = () => {
-    const selectedEntries = Object.entries(bulkGridRows).filter(([_, data]) => data.selected);
+    const selectedEntries = Object.entries(bulkGridRows).filter(([_, data]: [string, any]) => data && data.selected) as [string, any][];
     if (selectedEntries.length === 0) {
       alert('Pilih setidaknya 1 anggota untuk diproses.');
       return;
@@ -128,13 +128,13 @@ export default function ManageProfit({
     let index = 0;
 
     for (const [memberId, data] of selectedEntries) {
-      const pokok = parseInt(data.pokok.replace(/[^0-9]/g, ''), 10) || 0;
-      const bunga = parseInt(data.bunga.replace(/[^0-9]/g, ''), 10) || 0;
+      const pokok = parseInt(String(data?.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0;
+      const bunga = parseInt(String(data?.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0;
       
       if (pokok <= 0 && bunga <= 0) continue;
 
       const memberName = anggotaList.find(m => m.id === memberId)?.nama || 'Anggota';
-      const catatanBase = data.note.trim() || `Cicilan Pinjaman - ${memberName}`;
+      const catatanBase = (data?.note || '').trim() || `Cicilan Pinjaman - ${memberName}`;
 
       if (pokok > 0) {
         newTransactions.push({
@@ -1048,7 +1048,7 @@ export default function ManageProfit({
                         </button>
                       </div>
                       <p className="text-[11px] text-slate-500">
-                        {Object.values(bulkGridRows).filter(r => r.selected).length} dari {anggotaList.length} Anggota Dipilih
+                        {Object.values(bulkGridRows).filter((r: any) => r && r.selected).length} dari {anggotaList.length} Anggota Dipilih
                       </p>
                     </div>
                   </div>
@@ -1236,9 +1236,9 @@ export default function ManageProfit({
               <div className="text-xs font-mono text-slate-700">
                 {bulkActiveTab === 'grid' ? (
                   <span>
-                    Total Diproses: <strong className="text-green-primary">{Object.values(bulkGridRows).filter(r => r && r.selected && ((parseInt(String(r.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0) > 0 || (parseInt(String(r.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0) > 0)).length} Anggota</strong> 
-                    (Pokok: {formatRupiah(Object.values(bulkGridRows).filter(r => r && r.selected).reduce((sum, r) => sum + (parseInt(String(r?.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))}, 
-                    Bunga: {formatRupiah(Object.values(bulkGridRows).filter(r => r.selected).reduce((sum, r) => sum + (parseInt(String(r?.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))})
+                    Total Diproses: <strong className="text-green-primary">{Object.values(bulkGridRows).filter((r: any) => r && r.selected && ((parseInt(String(r.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0) > 0 || (parseInt(String(r.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0) > 0)).length} Anggota</strong> 
+                    (Pokok: {formatRupiah((Object.values(bulkGridRows) as any[]).filter((r: any) => r && r.selected).reduce((sum: number, r: any) => sum + (parseInt(String(r?.pokok || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))}, 
+                    Bunga: {formatRupiah((Object.values(bulkGridRows) as any[]).filter((r: any) => r && r.selected).reduce((sum: number, r: any) => sum + (parseInt(String(r?.bunga || '0').replace(/[^0-9]/g, ''), 10) || 0), 0))})
                   </span>
                 ) : (
                   <span>
